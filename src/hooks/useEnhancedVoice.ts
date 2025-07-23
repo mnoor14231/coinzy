@@ -1,4 +1,4 @@
-// Enhanced Voice Hook with External Arabic TTS APIs
+// Enhanced Voice Hook with Browser-based Arabic TTS
 import { useState, useEffect, useCallback } from 'react';
 import { Character } from '@/store/characterStore';
 
@@ -8,35 +8,6 @@ interface VoiceOptions {
   volume?: number;
   emotion?: string;
 }
-
-// Arabic TTS API Services
-const TTS_APIS = {
-  // ElevenLabs Arabic voices (free tier available)
-  ELEVENLABS: {
-    url: 'https://api.elevenlabs.io/v1/text-to-speech',
-    voices: {
-      'Haytham': 'voice_id_haytham', // Arabic male voice
-      'Sana': 'voice_id_sana',       // Arabic female voice
-    }
-  },
-  // Lahajati.ai - Specialized Arabic TTS
-  LAHAJATI: {
-    url: 'https://api.lahajati.ai/v1/synthesize',
-    voices: {
-      'Salma': 'ar-sa-female-1',     // Saudi Female
-      'Ahmed': 'ar-eg-male-1',       // Egyptian Male
-      'Layla': 'ar-ae-female-1',     // UAE Female
-    }
-  },
-  // SpeechGen.io Arabic voices
-  SPEECHGEN: {
-    url: 'https://speechgen.io/api/v1/tts',
-    voices: {
-      'Shakir': 'ar-male-1',
-      'Salma': 'ar-female-1',
-    }
-  }
-};
 
 export const useEnhancedVoice = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -60,79 +31,6 @@ export const useEnhancedVoice = () => {
       }
     }
   }, []);
-
-  // Try external Arabic TTS APIs first, fallback to browser
-  const speakWithExternalAPI = async (text: string, character: Character, emotion: string = 'neutral') => {
-    // Try ElevenLabs first (best quality)
-    try {
-      // Map each character to a specific voice
-      let selectedVoice = 'Haytham'; // Default male voice
-      
-      // Single character voice mapping
-      switch (character.id) {
-        case 'koinzy-buddy':
-          selectedVoice = 'Haytham'; // Friendly voice for Koinzy Buddy
-          break;
-        default:
-          selectedVoice = 'Haytham'; // Default voice
-      }
-
-      console.log(`🎤 Voice Selection: ${character.nameArabic} (${character.id}) → ${selectedVoice}`);
-
-      const response = await fetch('/api/tts-elevenlabs', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          text,
-          voice_id: selectedVoice,
-          model_id: 'eleven_multilingual_v2'
-        })
-      });
-
-      if (response.ok) {
-        const audioBlob = await response.blob();
-        const audioUrl = URL.createObjectURL(audioBlob);
-        const audio = new Audio(audioUrl);
-        
-        setIsSpeaking(true);
-        audio.onended = () => setIsSpeaking(false);
-        await audio.play();
-        return true;
-      }
-    } catch (error) {
-      console.log('ElevenLabs TTS failed, trying next service:', error);
-    }
-
-    // Try Lahajati.ai (Arabic specialized)
-    try {
-      const response = await fetch('/api/tts-lahajati', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          text,
-          voice: character.personality === 'magical' ? 'Layla' : 'Ahmed',
-          dialect: 'ar-SA',
-          emotion: emotion
-        })
-      });
-
-      if (response.ok) {
-        const audioBlob = await response.blob();
-        const audioUrl = URL.createObjectURL(audioBlob);
-        const audio = new Audio(audioUrl);
-        
-        setIsSpeaking(true);
-        audio.onended = () => setIsSpeaking(false);
-        await audio.play();
-        return true;
-      }
-    } catch (error) {
-      console.log('Lahajati TTS failed, falling back to browser:', error);
-    }
-
-    // Fallback to browser speech synthesis
-    return false;
-  };
 
   const speakWithBrowserTTS = (text: string, character: Character, emotion: string = 'neutral') => {
     if (!isSupported || !text.trim()) return;
@@ -248,12 +146,8 @@ export const useEnhancedVoice = () => {
   ) => {
     if (!text.trim()) return;
 
-    // Try external APIs first, fallback to browser
-    const externalSuccess = await speakWithExternalAPI(text, character, emotion);
-    
-    if (!externalSuccess) {
-      speakWithBrowserTTS(text, character, emotion);
-    }
+    // Use browser TTS directly
+    speakWithBrowserTTS(text, character, emotion);
   }, [voices, isSupported]);
 
   const speakGreeting = useCallback((character: Character | null) => {
