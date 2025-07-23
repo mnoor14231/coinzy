@@ -19,6 +19,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Text is required' }, { status: 400 });
     }
 
+    // Debug: Check if API key is configured
+    console.log('🔑 ElevenLabs API Key Status:', ELEVENLABS_API_KEY ? '✅ Configured' : '❌ Not configured');
+    if (ELEVENLABS_API_KEY) {
+      console.log('🔑 API Key Preview:', ELEVENLABS_API_KEY.substring(0, 10) + '...');
+    }
+
     // Check if API key is configured
     if (!ELEVENLABS_API_KEY) {
       console.log('ElevenLabs API key not configured - using browser fallback');
@@ -29,6 +35,8 @@ export async function POST(request: NextRequest) {
     }
 
     const selectedVoiceId = ARABIC_VOICES[voice_id as keyof typeof ARABIC_VOICES] || ARABIC_VOICES.Haytham;
+
+    console.log('🎤 Making ElevenLabs API call with voice:', selectedVoiceId);
 
     const response = await fetch(`${ELEVENLABS_API_URL}/${selectedVoiceId}`, {
       method: 'POST',
@@ -49,11 +57,16 @@ export async function POST(request: NextRequest) {
       }),
     });
 
+    console.log('📡 ElevenLabs API Response Status:', response.status);
+
     if (!response.ok) {
-      throw new Error(`ElevenLabs API error: ${response.status}`);
+      const errorText = await response.text();
+      console.error('❌ ElevenLabs API Error:', errorText);
+      throw new Error(`ElevenLabs API error: ${response.status} - ${errorText}`);
     }
 
     const audioBuffer = await response.arrayBuffer();
+    console.log('✅ ElevenLabs API Success - Audio size:', audioBuffer.byteLength, 'bytes');
     
     return new NextResponse(audioBuffer, {
       headers: {
