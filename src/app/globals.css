@@ -255,19 +255,13 @@ body {
 
 .loading-dots::after {
   content: '...';
-  animation: loadingDots 1.5s infinite;
+  animation: loadingDotsSimple 2s infinite;
 }
 
-@keyframes loadingDots {
-  0%, 20% {
-    content: '.';
-  }
-  40% {
-    content: '..';
-  }
-  60%, 100% {
-    content: '...';
-  }
+@keyframes loadingDotsSimple {
+  0%, 20% { content: '.'; }
+  40% { content: '..'; }
+  60%, 100% { content: '...'; }
 }
 
 @keyframes shake {
@@ -332,11 +326,13 @@ body {
 }
 
 .ultra-modern-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 
-    0 32px 80px rgba(0, 0, 0, 0.15),
-    0 12px 30px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transform: none;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.btn-primary:hover, .btn-secondary:hover {
+  transform: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 /* Ultra-modern card design */
@@ -388,9 +384,9 @@ body {
 }
 
 .sparkle {
-  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.2) 50%, transparent 70%);
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.001) 90%, transparent 90%);
   background-size: 200% 200%;
-  animation: sparkle 2s ease-in-out infinite;
+  animation: sparkle 120s ease-in-out infinite;
 }
 
 /* Enhanced progress bar */

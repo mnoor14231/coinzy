@@ -31,7 +31,7 @@ const Navigation: React.FC = () => {
     { href: '/missions', icon: Target, label: 'المهام', emoji: '🎯', color: 'from-green-500 to-emerald-500', roles: ['child'] },
     { href: '/bank', icon: PiggyBank, label: 'البنك', emoji: '🏦', color: 'from-pink-500 to-rose-500', roles: ['child'] },
     { href: '/progress', icon: Trophy, label: 'التقدم', emoji: '🏆', color: 'from-purple-500 to-violet-500', roles: ['child'] },
-    { href: '/parent', icon: Users, label: 'العائلة', emoji: '👨‍👩‍👧‍👦', color: 'from-orange-500 to-amber-500', roles: ['parent'] }
+    { href: '/parent', icon: Users, label: 'عائلة', emoji: '👨‍👩‍👧‍👦', color: 'from-orange-500 to-amber-500', roles: ['parent'] }
   ];
 
   // Filter nav items based on user role
@@ -71,7 +71,7 @@ const Navigation: React.FC = () => {
                 <span className={`text-xs font-bold mt-1 text-center transition-all duration-300 ${
                   isActive ? 'text-white drop-shadow-sm' : 'text-gray-700 group-hover:text-gray-900'
                 }`}>
-                  {item.label}
+                  {item.label} {currentUser.role === 'parent' && <span className="text-xs text-gray-700 font-bold">{currentUser.familyName}</span>}
                 </span>
                 {isActive && (
                   <div className="absolute -top-1 left-1/2 transform -translate-x-1/2">
@@ -93,13 +93,7 @@ const Navigation: React.FC = () => {
         </div>
         
         {/* Family name indicator */}
-        <div className="absolute -top-6 left-1/2 transform -translate-x-1/2">
-          <div className="bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 shadow-md">
-            <span className="text-xs font-bold text-gray-700">
-              {currentUser.role === 'parent' ? '👨‍👩‍👧‍👦' : '🧒'} {currentUser.familyName}
-            </span>
-          </div>
-        </div>
+        {/* This div is removed as per the edit hint. */}
       </div>
       <div className="h-safe-area-inset-bottom bg-white/80 backdrop-blur-lg" />
     </nav>

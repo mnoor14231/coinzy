@@ -119,8 +119,7 @@ const ParentPage: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    // Always redirect to port 3000, not the current port
-    window.location.href = 'http://localhost:3000';
+    window.location.href = '/';
   };
 
   const getChildProgress = () => {
@@ -159,13 +158,13 @@ const ParentPage: React.FC = () => {
                 <LogOut size={18} />
               </button>
             </div>
-            <p className="text-white/90 text-base px-4 py-2 rounded-lg bg-white/10">
-              تابع تقدم عائلة {currentUser?.familyName} في تعلم المال
+            <p className="text-white text-base px-4 py-2 rounded-lg bg-white/10">
+            {currentUser?.familyName}, تابع تقدم طفلك في اكتساب الثقافة المالية 
             </p>
           </div>
 
           {/* Child Progress Summary */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 sparkle">
             <div className="p-6 text-center">
               <div className="text-5xl mb-4">{childProgress.emoji}</div>
               <h2 className="text-2xl font-bold text-white mb-2">تقييم طفلك</h2>
@@ -193,11 +192,11 @@ const ParentPage: React.FC = () => {
               { title: 'الأسئلة المكتملة', value: `${completedQuestions.length}/${questions.length}`, emoji: '📚' },
               { title: 'سلسلة الأيام', value: streak, emoji: '🔥' }
             ].map((stat, index) => (
-              <div key={index} className="bg-white/10 rounded-2xl p-4 border border-white/20">
+              <div key={index} className="bg-white/10 rounded-2xl p-4 border border-white/20 ">
                 <div className="text-center">
                   <div className="text-3xl mb-2">{stat.emoji}</div>
                   <div className="text-lg font-bold text-white mb-1">{stat.value}</div>
-                  <div className="text-sm text-white/80">{stat.title}</div>
+                  <div className="text-sm font-bold text-white">{stat.title}</div>
                 </div>
               </div>
             ))}
@@ -205,10 +204,10 @@ const ParentPage: React.FC = () => {
 
           {/* Family Notifications */}
           {unreadNotifications.length > 0 && (
-            <div className="ultra-modern-card sparkle modern-shadow border-2 border-orange-400">
+            <div className="ultra-modern-card ">
               <div className="p-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <Gift className="text-orange-400 animate-bounce" size={28} />
+                  <Gift className="text-orange-400" size={28} />
                   <h3 className="text-xl font-bold text-white">
                     رسائل جديدة ({unreadNotifications.length})
                   </h3>
@@ -235,7 +234,7 @@ const ParentPage: React.FC = () => {
           )}
 
           {/* Enhanced Learning Progress Chart */}
-          <div className="ultra-modern-card sparkle modern-shadow">
+          <div className="ultra-modern-card sparkle">
             <div className="p-6">
               <h3 className="text-2xl font-bold text-white mb-6 text-center flex items-center justify-center gap-3">
                 <TrendingUp className="text-blue-400" size={28} />
@@ -270,7 +269,7 @@ const ParentPage: React.FC = () => {
           </div>
 
           {/* Enhanced XP & Savings Trend */}
-          <div className="ultra-modern-card sparkle modern-shadow">
+          <div className="ultra-modern-card sparkle">
             <div className="p-6">
               <h3 className="text-2xl font-bold text-white mb-6 text-center flex items-center justify-center gap-3">
                 <Star className="text-yellow-400" size={28} />
@@ -314,7 +313,7 @@ const ParentPage: React.FC = () => {
           </div>
 
           {/* Enhanced Savings Management */}
-          <div className="ultra-modern-card sparkle modern-shadow">
+          <div className="ultra-modern-card ">
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-2xl font-bold text-white flex items-center gap-3">
@@ -382,7 +381,7 @@ const ParentPage: React.FC = () => {
           </div>
 
           {/* Recent Achievements */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 sparkle">
             <div className="p-6">
               <h3 className="text-2xl font-bold text-white mb-6 text-center flex items-center justify-center gap-3">
                 <Award className="text-yellow-400" size={24} />
@@ -416,7 +415,7 @@ const ParentPage: React.FC = () => {
           </div>
 
           {/* Weekly Saving Goals */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 ">
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-xl font-bold text-white flex items-center gap-2">
@@ -529,7 +528,7 @@ const ParentPage: React.FC = () => {
           </div>
 
           {/* Family Tasks Checklist */}
-          <div className="ultra-modern-card sparkle modern-shadow">
+          <div className="ultra-modern-card border-4 border-green-500">
             <div className="p-6">
               <h3 className="text-2xl font-bold text-white mb-6 text-center flex items-center justify-center gap-3">
                 <Users className="text-purple-400" size={28} />
@@ -540,7 +539,7 @@ const ParentPage: React.FC = () => {
                 {familyTasks.map((task, index) => (
                   <div 
                     key={task.id}
-                    className={`flex items-start gap-4 p-4 rounded-xl transition-all duration-300 ${
+                    className={`flex items-start gap-4 p-4 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-[0_8px_32px_0_rgba(34,197,94,0.6)] ${
                       task.completed 
                         ? 'bg-green-500/20 border-2 border-green-400' 
                         : 'bg-purple-500/20 border-2 border-purple-400/50 hover:border-purple-400'
@@ -590,7 +589,7 @@ const ParentPage: React.FC = () => {
           </div>
 
           {/* Family Info */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 sparkle">
             <div className="p-6 text-center">
               <div className="text-5xl mb-3">👨‍👩‍👧‍👦</div>
               <h3 className="text-2xl font-bold text-white mb-3">

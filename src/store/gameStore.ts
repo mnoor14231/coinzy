@@ -58,7 +58,7 @@ export interface DailyMission {
 export interface BankTransaction {
   id: string;
   amount: number;
-  type: 'deposit' | 'interest' | 'bonus' | 'real_money_deposit';
+  type: 'deposit' | 'interest' | 'bonus' | 'real_money_deposit' | 'real_money_withdraw';
   date: Date;
   description: string;
 }
@@ -156,7 +156,7 @@ const initialQuestions: Question[] = [
   {
     id: '2',
     title: 'قرارات الإنفاق',
-    emoji: '🎯',
+    emoji: '��',
     question: 'أحمد ادخر ١٠٠ ريال في حصالته. أصدقاؤه يريدون الذهاب لمدينة الألعاب بـ ١٠٠ ريال. ماذا يفعل؟',
     options: [
       {
@@ -523,7 +523,7 @@ export const useGameStore = create<GameState>()(
         const newTransaction: BankTransaction = {
           id: Date.now().toString(),
           amount: -amount, // Negative for withdrawal
-          type: 'real_money_deposit', // Using same type but negative amount
+          type: 'real_money_withdraw', // Correct type for withdrawal
           date: new Date(),
           description: `إنفاق: ${description}`
         };

@@ -92,7 +92,7 @@ const MissionsPage: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    router.push('/');
+    window.location.href = '/';
   };
 
   return (

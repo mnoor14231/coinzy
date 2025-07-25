@@ -81,29 +81,30 @@ export default function HomePage() {
   return (
     <div className="min-h-screen p-4 relative overflow-hidden">
       {/* Animated background elements */}
-      <div className="fixed top-10 left-10 w-20 h-20 bg-yellow-300/20 rounded-full blur-xl animate-pulse" />
-      <div className="fixed top-32 right-10 w-16 h-16 bg-pink-300/20 rounded-full blur-xl animate-pulse delay-1000" />
-      <div className="fixed bottom-32 left-5 w-12 h-12 bg-blue-300/20 rounded-full blur-xl animate-pulse delay-2000" />
-      <div className="fixed bottom-20 right-8 w-14 h-14 bg-purple-300/20 rounded-full blur-xl animate-pulse delay-500" />
+      <div className="fixed top-10 left-10 w-20 h-20 bg-yellow-300/40 rounded-full blur-2xl animate-pulse" />
+      <div className="fixed top-32 right-10 w-16 h-16 bg-pink-300/40 rounded-full blur-2xl animate-pulse delay-1000" />
+      <div className="fixed bottom-32 left-5 w-12 h-12 bg-blue-300/40 rounded-full blur-2xl animate-pulse delay-2000" />
+      <div className="fixed bottom-20 right-8 w-14 h-14 bg-purple-300/40 rounded-full blur-2xl animate-pulse delay-500" />
 
       <div className="max-w-md mx-auto space-y-8">
         {/* Enhanced Header */}
         <div className="text-center py-8">
           <div className="relative mb-6">
-            <div className="text-8xl mb-4 animate-bounce">🪙</div>
-            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-2 text-2xl animate-pulse">✨</div>
-            <div className="absolute bottom-0 right-1/3 text-xl animate-pulse delay-500">🌟</div>
+            <div className="absolute left-1/2 top-6 -translate-x-1/2 w-32 h-32 bg-yellow-300/60 blur-2xl z-0" />
+            <div className="text-8xl mb-4 animate-bounce relative z-10 drop-shadow-[0_4px_32px_rgba(251,191,36,0.7)]">🪙</div>
+            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-2 text-2xl animate-pulse z-10 text-yellow-400 drop-shadow-[0_2px_8px_rgba(251,191,36,0.7)]">✨</div>
+            <div className="absolute bottom-0 right-1/3 text-xl animate-pulse delay-500 z-10 text-pink-400 drop-shadow-[0_2px_8px_rgba(236,72,153,0.7)]">🌟</div>
           </div>
-          <h1 className="text-5xl font-bold text-white mb-4 drop-shadow-lg">
-            مرحباً بك في <span className="gradient-text">كوينزي!</span>
+          <h1 className="text-5xl font-extrabold text-white mb-4 drop-shadow-[0_4px_24px_rgba(0,0,0,0.7)]">
+            مرحباً بك في <span className="gradient-text drop-shadow-[0_2px_12px_rgba(168,85,247,0.7)]">كوينزي!</span>
           </h1>
-          <div className="bg-white/15 backdrop-blur-sm rounded-2xl px-6 py-4 border border-white/20 mx-4">
-            <p className="text-white text-lg mb-2">🎓 الكورس المالي للأطفال</p>
-            <p className="text-white/80 text-sm">تعلم إدارة المال بطريقة ممتعة وآمنة</p>
+          <div className="bg-white/40 backdrop-blur-sm rounded-2xl px-6 py-4 border border-white/40 mx-4">
+            <p className="text-purple-700 text-lg mb-2 font-bold">🎓 الكورس المالي للأطفال</p>
+            <p className="text-purple-600 text-sm font-semibold">تعلم إدارة المال بطريقة ممتعة وآمنة</p>
             <div className="flex justify-center gap-2 mt-3">
-              <span className="bg-blue-500/30 text-white text-xs px-2 py-1 rounded-full">٤-٥ سنوات</span>
-              <span className="bg-green-500/30 text-white text-xs px-2 py-1 rounded-full">٦-٧ سنوات</span>
-              <span className="bg-purple-500/30 text-white text-xs px-2 py-1 rounded-full">٨-٩ سنوات</span>
+              <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full font-bold shadow">٤-٥ سنوات</span>
+              <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full font-bold shadow">٦-٧ سنوات</span>
+              <span className="bg-purple-500 text-white text-xs px-2 py-1 rounded-full font-bold shadow">٨-٩ سنوات</span>
             </div>
           </div>
         </div>
@@ -111,7 +112,7 @@ export default function HomePage() {
         {/* Role Selection */}
         {!selectedRole && (
           <div className="space-y-6 animate-in slide-in-from-bottom duration-500">
-            <h2 className="text-2xl font-bold text-white text-center mb-6">من أنت؟</h2>
+            <h2 className="text-2xl font-bold text-purple-700 drop-shadow-[0_2px_8px_rgba(168,85,247,0.5)] text-center mb-6">من أنت؟</h2>
             
             <div className="space-y-4">
               {/* Parent Option */}
@@ -200,9 +201,8 @@ export default function HomePage() {
                       type={showPassword ? 'text' : 'password'}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full p-4 border-2 border-gray-200 rounded-2xl focus:border-purple-400 focus:outline-none text-lg font-medium pr-12"
+                      className="w-full p-4 border-2 border-gray-200 rounded-2xl focus:border-purple-400 focus:outline-none text-lg font-medium pr-12 text-right"
                       placeholder={selectedRole === 'parent' ? 'كلمة مرور الوالدين' : 'كلمة مرور الطفل'}
-                      dir="ltr"
                     />
                     <button
                       type="button"

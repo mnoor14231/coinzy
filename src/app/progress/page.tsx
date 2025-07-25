@@ -148,7 +148,7 @@ const ProgressPage: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    router.push('/');
+    window.location.href = '/';
   };
 
   return (

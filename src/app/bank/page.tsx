@@ -147,7 +147,7 @@ const BankPage: React.FC = () => {
         if (selectedCharacter) {
           setTimeout(() => {
             speakWithCharacter(
-              `لقد أنفقت ${amount} ريال على ${withdrawDescription}. تذكر أن التوفير مهم!`,
+              `َلقد أنفَقٌت ${amount} ريالْ على ${withdrawDescription}. ْتَذَكَّر أن التوفير مهم!`,
               selectedCharacter,
               'encouraging'
             );
@@ -200,7 +200,7 @@ const BankPage: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    router.push('/');
+    window.location.href = '/';
   };
 
   const quickDepositOptions = [5, 10, 20, 50];
@@ -220,7 +220,7 @@ const BankPage: React.FC = () => {
 
   return (
     <AuthWrapper requiredRole="child">
-      <div className="min-h-screen pb-24 relative overflow-hidden">
+      <div className="min-h-screen pb-24 relative overflow-hidden bg-gradient-to-br from-blue-200 via-pink-200 via-yellow-100 to-green-200">
         
         {/* Confetti Effect */}
         {showConfetti && (
@@ -233,28 +233,34 @@ const BankPage: React.FC = () => {
           />
         )}
         {/* Animated background elements */}
-        <div className="fixed top-20 left-10 w-32 h-32 bg-yellow-300/20 rounded-full blur-2xl animate-pulse" />
-        <div className="fixed top-40 right-8 w-24 h-24 bg-green-300/20 rounded-full blur-xl animate-pulse delay-1000" />
-        <div className="fixed bottom-40 left-6 w-28 h-28 bg-blue-300/20 rounded-full blur-xl animate-pulse delay-2000" />
+        <div className="fixed top-10 left-10 w-32 h-32 bg-blue-300/40 rounded-full blur-2xl animate-pulse" />
+        <div className="fixed top-32 right-10 w-24 h-24 bg-yellow-300/50 rounded-full blur-2xl animate-pulse delay-1000" />
+        <div className="fixed bottom-40 left-6 w-40 h-40 bg-green-300/40 rounded-full blur-2xl animate-pulse delay-2000" />
+        <div className="absolute top-24 left-1/4 w-12 h-12 bg-pink-300/40 rounded-full blur-xl animate-float" />
+        <div className="absolute top-1/2 right-10 w-10 h-10 bg-yellow-200/60 rounded-full blur-lg animate-float" />
+        <div className="absolute bottom-32 left-1/3 w-16 h-16 bg-green-300/40 rounded-full blur-xl animate-float" />
 
         <div className="max-w-md mx-auto p-4 space-y-6">
           {/* Header */}
           <div className="text-center py-6">
             <div className="flex justify-between items-center mb-4">
               <div></div>
-              <div className="text-6xl emoji-bounce">🏦</div>
+              <div className="relative">
+                <div className="absolute left-1/2 top-6 -translate-x-1/2 w-24 h-24 bg-yellow-300/60 blur-2xl z-0" />
+                <div className="text-6xl emoji-bounce relative z-10 drop-shadow-[0_4px_32px_rgba(59,130,246,0.7)]">🏦</div>
+              </div>
               <button
                 onClick={handleLogout}
-                className="p-3 rounded-full bg-red-500 text-white hover:bg-red-600 transition-all duration-300 shadow-lg transform hover:scale-110"
+                className="p-3 rounded-full bg-red-500 text-white hover:bg-red-600 transition-all duration-300 shadow-xl transform hover:scale-110"
                 title="تسجيل الخروج"
               >
                 <LogOut size={20} />
               </button>
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2 drop-shadow-lg">
-              بنك <span className="gradient-text">{currentUser?.familyName}</span>
+            <h1 className="text-3xl font-extrabold text-cyan-600 mb-2 drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)]">
+              بنك <span className="font-extrabold text-black drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">{currentUser?.familyName}</span>
             </h1>
-            <p className="text-white/80 text-sm">
+            <p className="text-blue-600 text-base font-extrabold drop-shadow-[0_2px_8px_rgba(255,255,255,0.7)]">
               احفظ أموالك واحصل على مكافآت رائعة!
             </p>
           </div>
@@ -273,7 +279,7 @@ const BankPage: React.FC = () => {
           )}
 
           {/* Bank Balance - Big Display */}
-          <div className="card sparkle relative overflow-hidden">
+          <div className="card sparkle relative overflow-hidden border-4 border-pink-200 shadow-xl">
             <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 to-emerald-500/20" />
             <div className="relative text-center p-8">
               <div className="flex items-center justify-center gap-2 mb-4">
@@ -344,11 +350,11 @@ const BankPage: React.FC = () => {
               className="ultra-modern-card hover:scale-110 transition-all duration-500 sparkle group"
             >
               <div className="text-center p-6">
-                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-lg group-hover:shadow-green-500/50 transition-all duration-500">
+                <div className="w-16 h-16 mx-auto mb-2 bg-gradient-to-br from-green-300 via-yellow-200 to-blue-400 rounded-full flex items-center justify-center shadow-lg border-4 border-green-200 group-hover:shadow-green-500/50 transition-all duration-500">
                   <Plus className="text-white" size={32} />
                 </div>
-                <h3 className="font-bold text-white text-lg mb-2">إيداع نقود</h3>
-                <p className="text-white/80 text-sm">أضف أموالك المدخرة</p>
+                <div className="text-center text-green-800 font-bold text-sm mb-2">إيداع</div>
+                <p className="text-black/80 text-sm">أضف أموالك المدخرة</p>
               </div>
             </button>
 
@@ -357,11 +363,11 @@ const BankPage: React.FC = () => {
               className="ultra-modern-card hover:scale-110 transition-all duration-500 sparkle group"
             >
               <div className="text-center p-6">
-                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-red-500 to-pink-600 rounded-full flex items-center justify-center shadow-lg group-hover:shadow-red-500/50 transition-all duration-500">
+                <div className="w-16 h-16 mx-auto mb-2 bg-gradient-to-br from-pink-300 via-yellow-200 to-red-400 rounded-full flex items-center justify-center shadow-lg border-4 border-pink-200 group-hover:shadow-red-500/50 transition-all duration-500">
                   <Minus className="text-white" size={32} />
                 </div>
-                <h3 className="font-bold text-white text-lg mb-2">إنفاق نقود</h3>
-                <p className="text-white/80 text-sm">اشتر شيئاً تحتاجه</p>
+                <div className="text-center text-pink-700 font-bold text-sm mb-2">سحب</div>
+                <p className="text-black/80 text-sm">اشتر شيئاً تحتاجه</p>
               </div>
             </button>
           </div>
@@ -381,23 +387,23 @@ const BankPage: React.FC = () => {
           </div>
 
           {/* Progress Bar */}
-          <div className="card">
+          <div className="card bg-gradient-to-br from-blue-100 via-green-100 to-yellow-100 border-2 border-blue-200">
             <div className="p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-700">التقدم نحو الهدف</span>
-                <span className="text-sm text-gray-600">{progressPercentage.toFixed(1)}%</span>
+                <span className="text-sm font-bold text-blue-700">التقدم نحو الهدف</span>
+                <span className="text-sm font-bold text-green-700">{progressPercentage.toFixed(1)}%</span>
               </div>
               
-              <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+              <div className="w-full bg-white/40 rounded-full h-3 overflow-hidden border border-green-300">
                 <div 
-                  className="bg-gradient-to-r from-green-500 to-emerald-500 h-3 rounded-full transition-all duration-700 relative"
+                  className="bg-gradient-to-r from-green-400 to-emerald-500 h-3 rounded-full transition-all duration-700 relative"
                   style={{ width: `${progressPercentage}%` }}
                 >
                   <div className="absolute inset-0 bg-white/30 animate-pulse" />
                 </div>
               </div>
               
-              <div className="flex justify-between mt-2 text-xs text-gray-600">
+              <div className="flex justify-between mt-2 text-xs font-bold text-blue-700">
                 <span>{bankBalance.toFixed(2)} ريال</span>
                 <span>{savingsGoal} ريال</span>
               </div>
@@ -406,11 +412,11 @@ const BankPage: React.FC = () => {
 
           {/* Savings Chart */}
           {chartData.length > 0 && (
-            <div className="card">
+            <div className="card bg-gradient-to-br from-purple-100 via-pink-100 to-yellow-100 border-2 border-purple-200">
               <div className="p-4">
                 <div className="flex items-center gap-2 mb-4">
-                  <TrendingUp className="text-blue-600" size={20} />
-                  <h3 className="font-bold text-gray-800">نمو مدخراتك</h3>
+                  <TrendingUp className="text-purple-400" size={20} />
+                  <h3 className="font-bold text-purple-700 flex items-center gap-1">📈 نمو مدخراتك</h3>
                 </div>
                 <div className="h-32">
                   <ResponsiveContainer width="100%" height="100%">
@@ -420,9 +426,9 @@ const BankPage: React.FC = () => {
                       <Line 
                         type="monotone" 
                         dataKey="amount" 
-                        stroke="#10b981" 
+                        stroke="#a21caf" 
                         strokeWidth={3}
-                        dot={{ fill: '#10b981', strokeWidth: 2, r: 4 }}
+                        dot={{ fill: '#fbbf24', strokeWidth: 2, r: 6 }}
                       />
                     </LineChart>
                   </ResponsiveContainer>
@@ -432,25 +438,34 @@ const BankPage: React.FC = () => {
           )}
 
           {/* Recent Transactions */}
-          {transactions.filter(t => t.type === 'real_money_deposit').length > 0 && (
-            <div className="card">
+          {transactions.filter(t => ['deposit', 'real_money_deposit', 'withdraw', 'real_money_withdraw', 'انفاق'].includes(t.type)).length > 0 && (
+            <div className="card bg-gradient-to-br from-yellow-100 via-pink-100 to-blue-100 border-2 border-yellow-200">
               <div className="p-4">
-                <h3 className="font-bold text-gray-800 mb-4">آخر الإيداعات</h3>
+                <h3 className="font-bold text-yellow-700 mb-4 flex items-center gap-2">🧾 آخر الإيداعات والسحوبات</h3>
                 <div className="space-y-3 max-h-40 overflow-y-auto">
                   {transactions
-                    .filter(t => t.type === 'real_money_deposit')
+                    .filter(t => ['deposit', 'real_money_deposit', 'withdraw', 'real_money_withdraw', 'انفاق'].includes(t.type))
                     .slice(0, 5)
-                    .map(transaction => (
-                    <div key={transaction.id} className="flex justify-between items-center p-2 bg-green-50 rounded-lg">
-                      <div>
-                        <p className="font-medium text-gray-800">{transaction.description}</p>
-                        <p className="text-xs text-gray-600">
-                          {new Date(transaction.date).toLocaleDateString('ar-SA')}
-                        </p>
-                      </div>
-                      <span className="font-bold text-green-600">+{transaction.amount} ريال</span>
-                    </div>
-                  ))}
+                    .map(transaction => {
+                      const isDeposit = transaction.type === 'deposit' || transaction.type === 'real_money_deposit';
+                      const isWithdraw = !isDeposit && ((transaction as any).type === 'withdraw' || (transaction as any).type === 'real_money_withdraw' || (transaction as any).type === 'انفاق');
+                      return (
+                        <div key={transaction.id} className={`flex justify-between items-center p-2 rounded-lg shadow-sm border-l-4 mb-1 ${
+                          isDeposit ? 'bg-green-100 border-green-400' : isWithdraw ? 'bg-red-100 border-red-400' : 'bg-gray-100 border-gray-300'
+                        }`}> 
+                          <div className="flex items-center gap-2">
+                            <span className={`text-2xl ${isDeposit ? 'text-green-500' : isWithdraw ? 'text-red-500' : 'text-gray-400'}`}>{isDeposit ? '💰' : isWithdraw ? '💸' : ''}</span>
+                            <div>
+                              <p className="font-bold text-gray-800">{transaction.description}</p>
+                              <p className="text-xs font-bold text-gray-700">{new Date(transaction.date).toLocaleDateString('ar-SA')}</p>
+                            </div>
+                          </div>
+                          <span className={`font-bold text-lg ${isDeposit ? 'text-green-700 bg-green-200' : isWithdraw ? 'text-red-700 bg-red-200' : 'text-gray-600 bg-gray-200'} px-3 py-1 rounded-full`}>
+                            {isDeposit ? `+${transaction.amount}` : isWithdraw ? `-${Math.abs(transaction.amount)}` : transaction.amount} ريال
+                          </span>
+                        </div>
+                      );
+                    })}
                 </div>
               </div>
             </div>
@@ -638,38 +653,35 @@ const BankPage: React.FC = () => {
         {/* Goal Setting Modal */}
         {showGoalForm && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="card max-w-sm w-full sparkle">
+            <div className="card max-w-sm w-full sparkle bg-green-900/90 border-1 border-green-900">
               <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-800 mb-4 text-center">
+                <h3 className="text-xl font-extrabold text-blue-500 mb-4 text-center">
                   تحديد هدف ادخار جديد
                 </h3>
-
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                    <label className="block text-base font-bold text-white mb-2">
                       الهدف الجديد (ريال)
                     </label>
                     <input
                       type="number"
                       value={newGoal}
                       onChange={(e) => setNewGoal(Number(e.target.value))}
-                      className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-purple-400 focus:outline-none text-lg"
+                      className="w-full p-3 border-2 border-purple-400 rounded-xl focus:border-blue-500 focus:outline-none text-lg text-gray-900 bg-white placeholder-gray-400"
                       placeholder="100"
                       min={bankBalance + 1}
                     />
                   </div>
-
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-white">
                     الهدف الحالي: {savingsGoal} ريال
                     <br />
                     يجب أن يكون الهدف الجديد أكبر من رصيدك الحالي ({bankBalance} ريال)
                   </p>
-
                   <div className="flex gap-3 pt-4">
                     <button
                       onClick={handleSetGoal}
                       disabled={newGoal <= bankBalance}
-                      className="flex-1 bg-purple-500 hover:bg-purple-600 disabled:bg-gray-400 text-white font-bold py-3 rounded-xl transition-colors"
+                      className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:bg-gray-400 text-white font-bold py-3 rounded-xl transition-colors"
                     >
                       🎯 تحديد الهدف
                     </button>

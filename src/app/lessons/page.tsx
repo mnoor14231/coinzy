@@ -342,16 +342,16 @@ export default function LessonsPage() {
   // Greeting when first loading lessons page
   useEffect(() => {
     if (!isMounted || !selectedCharacter || hasGreeted || selectedCourse) return;
-    
+    if (isSpeaking || isProcessing) return;
+    setHasGreeted(true);
     setTimeout(() => {
       speakWithCharacter(
         'اهلا بك في الدرس المالي! اختر الدرس المناسب لعمرك وهيا نتعلم الاشياء المهمة عن المال!',
         selectedCharacter,
         'happy'
       );
-      setHasGreeted(true);
     }, 1000);
-     }, [selectedCharacter, isMounted, hasGreeted, selectedCourse, speakWithCharacter]);
+  }, [selectedCharacter, isMounted, hasGreeted, selectedCourse, isSpeaking, isProcessing, speakWithCharacter]);
 
   // Read story when lesson starts - prevent voice overlap
   useEffect(() => {
@@ -405,7 +405,7 @@ export default function LessonsPage() {
     if (selectedCharacter) {
       setTimeout(() => {
         speakWithCharacter(
-          `رائع! اخترت كورس "${course.title}". هيا نبدأ بأول درس!`,
+          `رائع! اخترت درس "${course.title}". هيا نبدأ بأول درس!`,
           selectedCharacter,
           'happy'
         );
@@ -563,7 +563,7 @@ export default function LessonsPage() {
       if (selectedCharacter) {
         setTimeout(() => {
           speakWithCharacter(
-            `مبروك! أكملت كورس "${selectedCourse.title}" بنجاح! أنت بطل حقيقي!`,
+            `مبروك! أكملت الدرس "${selectedCourse.title}" بنجاح! أنت بطل حقيقي!`,
             selectedCharacter,
             'celebrating'
           );
@@ -587,7 +587,7 @@ export default function LessonsPage() {
 
   const handleLogout = () => {
     logout();
-    router.push('/');
+    window.location.href = '/';
   };
 
   if (!isMounted) {
@@ -719,11 +719,11 @@ export default function LessonsPage() {
                 {courseProgress.map((course, index) => (
                   <div
                     key={course.id}
-                                         className={`bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 transition-all duration-300 hover:bg-white/15 cursor-pointer ${
-                       course.completed 
-                         ? 'border-green-400 bg-green-400/10' 
-                         : 'hover:border-purple-400/50'
-                     }`}
+                    className={`bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 transition-all duration-300 hover:bg-white/15 cursor-pointer hover:scale-105 hover:shadow-2xl ${
+                      course.completed 
+                        ? 'border-green-400 bg-green-400/10' 
+                        : 'hover:border-purple-400/50'
+                    }`}
                     onClick={() => handleCourseSelect(course)}
                   >
                     <div className="p-6">
@@ -830,6 +830,24 @@ export default function LessonsPage() {
                             {currentLesson.story}
                           </p>
                         </div>
+                        <div className="flex justify-center mt-2">
+                          <button
+                            onClick={() => {
+                              if (!isSpeaking && !isProcessing && selectedCourse && selectedCharacter) {
+                                setCharacterEmotion('speaking');
+                                speakWithCharacter(
+                                  selectedCourse.lessons[currentLessonIndex].story,
+                                  selectedCharacter,
+                                  'speaking'
+                                );
+                              }
+                            }}
+                            disabled={isSpeaking || isProcessing}
+                            className="bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white font-bold py-2 px-6 rounded-xl transition-all duration-300 ml-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            🔁 إعادة قراءة القصة
+                          </button>
+                        </div>
                       </div>
                     </div>
 
@@ -841,6 +859,25 @@ export default function LessonsPage() {
                           <h3 className="text-xl font-bold text-white mb-2">
                             {currentLesson.question}
                           </h3>
+                        </div>
+
+                        <div className="flex justify-center mt-2">
+                          <button
+                            onClick={() => {
+                              if (!isSpeaking && !isProcessing && selectedCourse && selectedCharacter) {
+                                setCharacterEmotion('thinking');
+                                speakWithCharacter(
+                                  selectedCourse.lessons[currentLessonIndex].question,
+                                  selectedCharacter,
+                                  'thinking'
+                                );
+                              }
+                            }}
+                            disabled={isSpeaking || isProcessing}
+                            className="bg-gradient-to-r from-blue-400 to-purple-500 hover:from-blue-500 hover:to-purple-600 text-white font-bold py-2 px-6 rounded-xl transition-all duration-300 ml-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            🔁 إعادة قراءة السؤال
+                          </button>
                         </div>
 
                         {/* Answer Options */}
