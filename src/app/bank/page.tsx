@@ -200,7 +200,7 @@ const BankPage: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    window.location.href = '/';
+    router.push('/');
   };
 
   const quickDepositOptions = [5, 10, 20, 50];

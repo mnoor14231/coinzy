@@ -587,7 +587,7 @@ export default function LessonsPage() {
 
   const handleLogout = () => {
     logout();
-    window.location.href = '/';
+    router.push('/');
   };
 
   if (!isMounted) {

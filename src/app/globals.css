@@ -110,6 +110,11 @@
     animation: emojiFloat 2s ease-in-out infinite;
   }
   
+  .gentle-float {
+    display: inline-block;
+    animation: gentleFloat 3s ease-in-out infinite;
+  }
+  
   .sparkle {
     position: relative;
     overflow: hidden;
@@ -198,6 +203,15 @@
   }
   75% {
     transform: translateY(-2px) rotate(-3deg);
+  }
+}
+
+@keyframes gentleFloat {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-3px) scale(1.02);
   }
 }
 

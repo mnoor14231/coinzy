@@ -97,7 +97,7 @@ const Amazing3DCharacter: React.FC<Props> = ({
         {/* 3D Container with enhanced shadow and depth */}
         <div className={`w-full h-full relative rounded-full bg-gradient-to-br ${colors.bg} shadow-2xl ${colors.shadow} border-4 border-white/60 overflow-hidden transform-gpu transition-all duration-500 ${
           isProcessing ? 'animate-pulse scale-105 opacity-75' : 
-          isSpeaking ? 'animate-bounce scale-110' : 
+          isSpeaking ? 'gentle-float scale-105' : 
           'hover:scale-105'
         }`}
              style={{
@@ -118,95 +118,249 @@ const Amazing3DCharacter: React.FC<Props> = ({
           
           {/* Enhanced Character Face SVG */}
           <svg viewBox="0 0 240 280" className="w-full h-full relative z-10">
-            {/* Character Body */}
-            <ellipse cx="120" cy="220" rx="45" ry="30" fill="#4A90E2" opacity="0.8" />
-            
-            {/* Character Head */}
-            <circle 
-              cx="120" 
-              cy="120" 
-              r="85" 
-              fill={emotion === 'celebrating' ? '#FFD700' : emotion === 'sad' ? '#87CEEB' : '#FFA07A'}
-              className={`transition-all duration-500 ${isSpeaking ? 'animate-pulse' : ''}`}
+            {/* Character Body - Enhanced Rectangle */}
+            <rect 
+              x="75" 
+              y="180" 
+              width="90" 
+              height="80" 
+              rx="15" 
+              ry="15" 
+              fill="#4A90E2" 
+              opacity="0.8"
               style={{
                 filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))'
               }}
             />
             
-            {/* Face highlight for 3D effect */}
-            <ellipse cx="105" cy="95" rx="30" ry="35" fill="rgba(255,255,255,0.3)" />
+            {/* Body highlight for 3D effect */}
+            <rect 
+              x="80" 
+              y="185" 
+              width="75" 
+              height="70" 
+              rx="12" 
+              ry="12" 
+              fill="rgba(255,255,255,0.2)"
+            />
             
-            {/* Eyes with 3D depth */}
+            {/* Body outline for definition */}
+            <rect 
+              x="75" 
+              y="180" 
+              width="90" 
+              height="80" 
+              rx="15" 
+              ry="15" 
+              fill="none"
+              stroke="#3A7BC8"
+              strokeWidth="2"
+              opacity="0.6"
+            />
+            
+            {/* Character Head - Better Rounded Shape */}
+            <rect 
+              x="45" 
+              y="45" 
+              width="150" 
+              height="150" 
+              rx="75" 
+              ry="75" 
+              fill={emotion === 'celebrating' ? '#FFD700' : emotion === 'sad' ? '#87CEEB' : '#FFA07A'}
+              className={`transition-all duration-500 ${isSpeaking ? 'animate-pulse' : ''}`}
+              style={{
+                filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.3))'
+              }}
+            />
+            
+            {/* Head outline for definition */}
+            <rect 
+              x="45" 
+              y="45" 
+              width="150" 
+              height="150" 
+              rx="75" 
+              ry="75" 
+              fill="none"
+              stroke={emotion === 'celebrating' ? '#E6C200' : emotion === 'sad' ? '#6BA5C7' : '#E68A5C'}
+              strokeWidth="3"
+              opacity="0.7"
+            />
+            
+            
+            
+            {/* Enhanced Friendly Eyes */}
+            {/* Left Eye */}
             <ellipse 
               cx="95" 
               cy="100" 
-              rx={isBlinking ? "3" : "12"} 
-              ry={isBlinking ? "2" : "15"}
+              rx={isBlinking ? "2" : "11"} 
+              ry={isBlinking ? "1" : "13"}
               fill="#000"
               className="transition-all duration-150"
+              style={{
+                filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.2))'
+              }}
             />
+            
+            {/* Right Eye */}
             <ellipse 
               cx="145" 
               cy="100" 
-              rx={isBlinking ? "3" : "12"} 
-              ry={isBlinking ? "2" : "15"}
+              rx={isBlinking ? "2" : "11"} 
+              ry={isBlinking ? "1" : "13"}
               fill="#000"
               className="transition-all duration-150"
+              style={{
+                filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.2))'
+              }}
             />
             
-            {/* Eye highlights and pupils */}
+            {/* Enhanced friendly highlights */}
             {!isBlinking && (
               <>
-                <circle cx="98" cy="97" r="4" fill="#fff" />
-                <circle cx="148" cy="97" r="4" fill="#fff" />
-                <circle cx="100" cy="102" r="2" fill="#fff" opacity="0.8" />
-                <circle cx="150" cy="102" r="2" fill="#fff" opacity="0.8" />
+                {/* Main highlights */}
+                <circle cx="92" cy="96" r="4" fill="#fff" />
+                <circle cx="142" cy="96" r="4" fill="#fff" />
+                
+                {/* Subtle secondary highlights */}
+                <circle cx="94" cy="102" r="2" fill="#fff" opacity="0.7" />
+                <circle cx="144" cy="102" r="2" fill="#fff" opacity="0.7" />
+                
+                {/* Tiny sparkle highlights */}
+                <circle cx="90" cy="94" r="1" fill="#fff" opacity="0.9" />
+                <circle cx="140" cy="94" r="1" fill="#fff" opacity="0.9" />
               </>
             )}
 
-            {/* Enhanced Eyebrows with 3D effect */}
+            {/* Enhanced Expressive Eyebrows - Smaller */}
+            {/* Left Eyebrow */}
             <path 
-              d={emotion === 'thinking' ? "M 80 85 Q 95 75 110 82" : 
-                  emotion === 'sad' ? "M 80 90 Q 95 95 110 88" :
-                  emotion === 'happy' ? "M 80 82 Q 95 75 110 80" :
-                  "M 80 85 Q 95 78 110 83"} 
+              d={emotion === 'thinking' ? "M 80 82 Q 95 72 110 79" : 
+                  emotion === 'sad' ? "M 80 87 Q 95 92 110 85" :
+                  emotion === 'happy' ? "M 80 79 Q 95 72 110 77" :
+                  emotion === 'excited' ? "M 80 77 Q 95 70 110 75" :
+                  emotion === 'celebrating' ? "M 80 76 Q 95 69 110 74" :
+                  "M 80 81 Q 95 75 110 80"} 
               stroke="#8B4513" 
               strokeWidth="4" 
               fill="none"
+              strokeLinecap="round"
               className="transition-all duration-500"
-              style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3))' }}
+              style={{ 
+                filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.2))',
+                strokeDasharray: emotion === 'thinking' ? "2,3" : "none"
+              }}
             />
+            
+            {/* Right Eyebrow */}
             <path 
-              d={emotion === 'thinking' ? "M 130 82 Q 145 75 160 85" : 
-                  emotion === 'sad' ? "M 130 88 Q 145 95 160 90" :
-                  emotion === 'happy' ? "M 130 80 Q 145 75 160 82" :
-                  "M 130 83 Q 145 78 160 85"} 
+              d={emotion === 'thinking' ? "M 130 79 Q 145 72 160 82" : 
+                  emotion === 'sad' ? "M 130 85 Q 145 92 160 87" :
+                  emotion === 'happy' ? "M 130 77 Q 145 72 160 79" :
+                  emotion === 'excited' ? "M 130 75 Q 145 70 160 77" :
+                  emotion === 'celebrating' ? "M 130 74 Q 145 69 160 76" :
+                  "M 130 80 Q 145 75 160 81"} 
               stroke="#8B4513" 
               strokeWidth="4" 
               fill="none"
+              strokeLinecap="round"
               className="transition-all duration-500"
-              style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3))' }}
+              style={{ 
+                filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.2))',
+                strokeDasharray: emotion === 'thinking' ? "2,3" : "none"
+              }}
+            />
+            
+            {/* Eyebrow highlights for 3D effect - Smaller */}
+            <path 
+              d={emotion === 'thinking' ? "M 80 80 Q 95 70 110 77" : 
+                  emotion === 'sad' ? "M 80 85 Q 95 90 110 83" :
+                  emotion === 'happy' ? "M 80 77 Q 95 70 110 75" :
+                  emotion === 'excited' ? "M 80 75 Q 95 68 110 73" :
+                  emotion === 'celebrating' ? "M 80 74 Q 95 67 110 72" :
+                  "M 80 79 Q 95 73 110 78"} 
+              stroke="#D2691E" 
+              strokeWidth="1.5" 
+              fill="none"
+              strokeLinecap="round"
+              opacity="0.6"
+            />
+            <path 
+              d={emotion === 'thinking' ? "M 130 77 Q 145 70 160 80" : 
+                  emotion === 'sad' ? "M 130 83 Q 145 90 160 85" :
+                  emotion === 'happy' ? "M 130 75 Q 145 70 160 77" :
+                  emotion === 'excited' ? "M 130 73 Q 145 68 160 75" :
+                  emotion === 'celebrating' ? "M 130 72 Q 145 67 160 74" :
+                  "M 130 78 Q 145 73 160 80"} 
+              stroke="#D2691E" 
+              strokeWidth="1.5" 
+              fill="none"
+              strokeLinecap="round"
+              opacity="0.6"
             />
 
-            {/* 3D Nose */}
-            <ellipse cx="120" cy="115" rx="4" ry="8" fill="#FF8C69" />
-            <ellipse cx="120" cy="113" rx="2" ry="4" fill="rgba(255,255,255,0.3)" />
+            {/* Cute Small Nose */}
+            {/* Main nose shape */}
+            <ellipse 
+              cx="120" 
+              cy="115" 
+              rx="3" 
+              ry="6" 
+              fill="#FF8C69"
+              style={{
+                filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))'
+              }}
+            />
+            
+            {/* Small nose highlight */}
+            <ellipse 
+              cx="119" 
+              cy="113" 
+              rx="1" 
+              ry="3" 
+              fill="rgba(255,255,255,0.3)"
+            />
 
-            {/* Enhanced Mouth with 3D depth */}
+            {/* Enhanced Friendly Mouth - Smaller */}
             <path 
               d={
-                mouthState === 'open' ? "M 100 140 Q 120 160 140 140" :
-                mouthState === 'semi' ? "M 105 145 Q 120 155 135 145" :
-                emotion === 'happy' || emotion === 'celebrating' ? "M 100 135 Q 120 150 140 135" :
-                emotion === 'sad' ? "M 100 145 Q 120 130 140 145" :
-                "M 105 140 L 135 140"
+                mouthState === 'open' ? "M 105 140 Q 120 155 135 140" :
+                mouthState === 'semi' ? "M 107 143 Q 120 150 133 143" :
+                emotion === 'sad' ? "M 105 143 Q 120 128 135 143" :
+                emotion === 'thinking' ? "M 107 140 Q 120 141 133 140" :
+                emotion === 'excited' ? "M 103 135 Q 120 145 137 135" :
+                emotion === 'celebrating' ? "M 103 134 Q 120 147 137 134" :
+                "M 105 137 Q 120 143 135 137"
               }
               stroke="#8B4513" 
               strokeWidth="4" 
               fill={mouthState !== 'closed' ? "#FFB6C1" : "none"}
-              className="transition-all duration-200"
-              style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }}
+              strokeLinecap="round"
+              className="transition-all duration-300"
+              style={{ 
+                filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.2))',
+                strokeLinejoin: 'round'
+              }}
             />
+            
+            {/* Mouth highlight for 3D effect - Smaller */}
+            {mouthState !== 'closed' && (
+              <path 
+                d={
+                  emotion === 'sad' ? "M 105 141 Q 120 126 135 141" :
+                  emotion === 'thinking' ? "M 107 138 Q 120 139 133 138" :
+                  emotion === 'excited' ? "M 103 133 Q 120 143 137 133" :
+                  emotion === 'celebrating' ? "M 103 132 Q 120 145 137 132" :
+                  "M 105 135 Q 120 141 135 135"
+                }
+                stroke="rgba(255,255,255,0.4)" 
+                strokeWidth="1.5" 
+                fill="none"
+                strokeLinecap="round"
+                opacity="0.6"
+              />
+            )}
 
             {/* Enhanced Cheeks for happy emotions */}
             {(emotion === 'happy' || emotion === 'celebrating' || emotion === 'excited') && (
@@ -218,73 +372,308 @@ const Amazing3DCharacter: React.FC<Props> = ({
               </>
             )}
 
-            {/* HANDS - The main enhancement! */}
+            {/* Enhanced 3D Hands with Rounded Rectangles - Smaller and More Refined */}
             {/* Left Hand */}
-            <g className={`transition-all duration-500 ${handPosition === 'waving' ? 'animate-bounce' : ''}`}>
-              <circle 
-                cx={handPosition === 'chin' ? "80" : handPosition === 'waving' ? "60" : handPosition === 'thumbsUp' ? "70" : "75"} 
-                cy={handPosition === 'chin' ? "160" : handPosition === 'waving' ? "140" : handPosition === 'thumbsUp' ? "150" : handPosition === 'down' ? "200" : "175"} 
-                r="15" 
+            <g className={`transition-all duration-500 ${handPosition === 'waving' ? 'emoji-bounce' : ''}`}>
+              {/* Main hand palm - Smaller size */}
+              <rect 
+                x={handPosition === 'chin' ? "72" : handPosition === 'waving' ? "52" : handPosition === 'thumbsUp' ? "62" : "67"} 
+                y={handPosition === 'chin' ? "148" : handPosition === 'waving' ? "128" : handPosition === 'thumbsUp' ? "138" : handPosition === 'down' ? "163" : "163"} 
+                width="14" 
+                height="28" 
+                rx="7" 
+                ry="7" 
                 fill="#FDBCB4"
-                style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }}
+                style={{ 
+                  filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.25))',
+                  transform: handPosition === 'waving' ? 'rotate(-15deg)' : 'rotate(0deg)'
+                }}
               />
-              {/* Fingers */}
+              
+              {/* Hand palm highlight - Enhanced gradient effect */}
+              <rect 
+                x={handPosition === 'chin' ? "73" : handPosition === 'waving' ? "53" : handPosition === 'thumbsUp' ? "63" : "68"} 
+                y={handPosition === 'chin' ? "150" : handPosition === 'waving' ? "130" : handPosition === 'thumbsUp' ? "140" : handPosition === 'down' ? "165" : "165"} 
+                width="12" 
+                height="20" 
+                rx="6" 
+                ry="6" 
+                fill="rgba(255,255,255,0.4)"
+              />
+              
+              {/* Hand palm outline - Thinner stroke */}
+              <rect 
+                x={handPosition === 'chin' ? "72" : handPosition === 'waving' ? "52" : handPosition === 'thumbsUp' ? "62" : "67"} 
+                y={handPosition === 'chin' ? "148" : handPosition === 'waving' ? "128" : handPosition === 'thumbsUp' ? "138" : handPosition === 'down' ? "163" : "163"} 
+                width="14" 
+                height="28" 
+                rx="7" 
+                ry="7" 
+                fill="none"
+                stroke="#E6A89C"
+                strokeWidth="1"
+                opacity="0.6"
+              />
+              
+              {/* Fingers for different positions - Smaller and more refined */}
               {handPosition === 'thumbsUp' && (
-                <ellipse cx="65" cy="142" rx="3" ry="8" fill="#FDBCB4" transform="rotate(-20 65 142)" />
+                <>
+                  {/* Thumb - Smaller */}
+                  <ellipse cx="66" cy="144" rx="2.5" ry="6" fill="#FDBCB4" transform="rotate(-20 66 144)" />
+                  <ellipse cx="66" cy="144" rx="1.5" ry="4" fill="rgba(255,255,255,0.3)" transform="rotate(-20 66 144)" />
+                  {/* Other fingers curled - Smaller */}
+                  <ellipse cx="73" cy="163" rx="1.5" ry="2.5" fill="#FDBCB4" transform="rotate(-10 73 163)" />
+                  <ellipse cx="75" cy="164" rx="1.5" ry="2.5" fill="#FDBCB4" transform="rotate(5 75 164)" />
+                  <ellipse cx="77" cy="163" rx="1.5" ry="2.5" fill="#FDBCB4" transform="rotate(15 77 163)" />
+                  <ellipse cx="79" cy="164" rx="1.5" ry="2.5" fill="#FDBCB4" transform="rotate(25 79 164)" />
+                </>
               )}
               {handPosition === 'waving' && (
                 <>
-                  <ellipse cx="58" cy="135" rx="2" ry="6" fill="#FDBCB4" transform="rotate(-10 58 135)" />
-                  <ellipse cx="62" cy="133" rx="2" ry="7" fill="#FDBCB4" transform="rotate(10 62 133)" />
-                  <ellipse cx="66" cy="135" rx="2" ry="6" fill="#FDBCB4" transform="rotate(30 66 135)" />
+                  {/* Extended fingers for waving - Smaller */}
+                  <ellipse cx="60" cy="137" rx="1.5" ry="5" fill="#FDBCB4" transform="rotate(-10 60 137)" />
+                  <ellipse cx="63" cy="135" rx="1.5" ry="6" fill="#FDBCB4" transform="rotate(10 63 135)" />
+                  <ellipse cx="66" cy="137" rx="1.5" ry="5" fill="#FDBCB4" transform="rotate(30 66 137)" />
+                  <ellipse cx="69" cy="139" rx="1.5" ry="4" fill="#FDBCB4" transform="rotate(45 69 139)" />
+                  {/* Thumb tucked - Smaller */}
+                  <ellipse cx="69" cy="147" rx="1.5" ry="3" fill="#FDBCB4" transform="rotate(-30 69 147)" />
+                </>
+              )}
+              {handPosition === 'idle' && (
+                <>
+                  {/* Natural relaxed fingers - Smaller */}
+                  <ellipse cx="71" cy="163" rx="1.5" ry="3" fill="#FDBCB4" transform="rotate(-5 71 163)" />
+                  <ellipse cx="73" cy="165" rx="1.5" ry="4" fill="#FDBCB4" transform="rotate(5 73 165)" />
+                  <ellipse cx="75" cy="163" rx="1.5" ry="3" fill="#FDBCB4" transform="rotate(15 75 163)" />
+                  <ellipse cx="77" cy="165" rx="1.5" ry="2.5" fill="#FDBCB4" transform="rotate(25 77 165)" />
+                  {/* Thumb - Smaller */}
+                  <ellipse cx="68" cy="157" rx="1.5" ry="3" fill="#FDBCB4" transform="rotate(-15 68 157)" />
+                </>
+              )}
+              {handPosition === 'gripping' && (
+                <>
+                  {/* Gripping fingers - curved around - Smaller */}
+                  <ellipse cx="73" cy="160" rx="1.5" ry="2.5" fill="#FDBCB4" transform="rotate(-15 73 160)" />
+                  <ellipse cx="75" cy="161" rx="1.5" ry="2.5" fill="#FDBCB4" transform="rotate(-5 75 161)" />
+                  <ellipse cx="77" cy="160" rx="1.5" ry="2.5" fill="#FDBCB4" transform="rotate(5 77 160)" />
+                  <ellipse cx="79" cy="161" rx="1.5" ry="2.5" fill="#FDBCB4" transform="rotate(15 79 161)" />
+                  {/* Thumb for grip - Smaller */}
+                  <ellipse cx="69" cy="160" rx="1.5" ry="3" fill="#FDBCB4" transform="rotate(-25 69 160)" />
                 </>
               )}
             </g>
 
             {/* Right Hand */}
-            <g className={`transition-all duration-500 ${handPosition === 'waving' ? 'animate-bounce' : ''}`}
+            <g className={`transition-all duration-500 ${handPosition === 'waving' ? 'emoji-bounce' : ''}`}
                style={{ animationDelay: handPosition === 'waving' ? '0.2s' : '0s' }}>
-              <circle 
-                cx={handPosition === 'chin' ? "160" : handPosition === 'waving' ? "180" : handPosition === 'thumbsUp' ? "170" : "165"} 
-                cy={handPosition === 'chin' ? "160" : handPosition === 'waving' ? "140" : handPosition === 'thumbsUp' ? "150" : handPosition === 'down' ? "200" : "175"} 
-                r="15" 
+              {/* Main hand palm - Smaller size */}
+              <rect 
+                x={handPosition === 'chin' ? "154" : handPosition === 'waving' ? "174" : handPosition === 'thumbsUp' ? "164" : "159"} 
+                y={handPosition === 'chin' ? "148" : handPosition === 'waving' ? "128" : handPosition === 'thumbsUp' ? "138" : handPosition === 'down' ? "163" : "163"} 
+                width="14" 
+                height="28" 
+                rx="7" 
+                ry="7" 
                 fill="#FDBCB4"
-                style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }}
+                style={{ 
+                  filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.25))',
+                  transform: handPosition === 'waving' ? 'rotate(15deg)' : 'rotate(0deg)'
+                }}
               />
-              {/* Fingers */}
+              
+              {/* Hand palm highlight - Enhanced gradient effect */}
+              <rect 
+                x={handPosition === 'chin' ? "155" : handPosition === 'waving' ? "175" : handPosition === 'thumbsUp' ? "165" : "160"} 
+                y={handPosition === 'chin' ? "150" : handPosition === 'waving' ? "130" : handPosition === 'thumbsUp' ? "140" : handPosition === 'down' ? "165" : "165"} 
+                width="12" 
+                height="20" 
+                rx="6" 
+                ry="6" 
+                fill="rgba(255,255,255,0.4)"
+              />
+              
+              {/* Hand palm outline - Thinner stroke */}
+              <rect 
+                x={handPosition === 'chin' ? "154" : handPosition === 'waving' ? "174" : handPosition === 'thumbsUp' ? "164" : "159"} 
+                y={handPosition === 'chin' ? "148" : handPosition === 'waving' ? "128" : handPosition === 'thumbsUp' ? "138" : handPosition === 'down' ? "163" : "163"} 
+                width="14" 
+                height="28" 
+                rx="7" 
+                ry="7" 
+                fill="none"
+                stroke="#E6A89C"
+                strokeWidth="1"
+                opacity="0.6"
+              />
+              
+              {/* Fingers for different positions - Smaller and more refined */}
               {handPosition === 'thumbsUp' && (
-                <ellipse cx="175" cy="142" rx="3" ry="8" fill="#FDBCB4" transform="rotate(20 175 142)" />
+                <>
+                  {/* Thumb - Smaller */}
+                  <ellipse cx="174" cy="144" rx="2.5" ry="6" fill="#FDBCB4" transform="rotate(20 174 144)" />
+                  <ellipse cx="174" cy="144" rx="1.5" ry="4" fill="rgba(255,255,255,0.3)" transform="rotate(20 174 144)" />
+                  {/* Other fingers curled - Smaller */}
+                  <ellipse cx="167" cy="163" rx="1.5" ry="2.5" fill="#FDBCB4" transform="rotate(10 167 163)" />
+                  <ellipse cx="165" cy="164" rx="1.5" ry="2.5" fill="#FDBCB4" transform="rotate(-5 165 164)" />
+                  <ellipse cx="163" cy="163" rx="1.5" ry="2.5" fill="#FDBCB4" transform="rotate(-15 163 163)" />
+                  <ellipse cx="161" cy="164" rx="1.5" ry="2.5" fill="#FDBCB4" transform="rotate(-25 161 164)" />
+                </>
               )}
               {handPosition === 'waving' && (
                 <>
-                  <ellipse cx="182" cy="135" rx="2" ry="6" fill="#FDBCB4" transform="rotate(10 182 135)" />
-                  <ellipse cx="178" cy="133" rx="2" ry="7" fill="#FDBCB4" transform="rotate(-10 178 133)" />
-                  <ellipse cx="174" cy="135" rx="2" ry="6" fill="#FDBCB4" transform="rotate(-30 174 135)" />
+                  {/* Extended fingers for waving - Smaller */}
+                  <ellipse cx="180" cy="137" rx="1.5" ry="5" fill="#FDBCB4" transform="rotate(10 180 137)" />
+                  <ellipse cx="177" cy="135" rx="1.5" ry="6" fill="#FDBCB4" transform="rotate(-10 177 135)" />
+                  <ellipse cx="174" cy="137" rx="1.5" ry="5" fill="#FDBCB4" transform="rotate(-30 174 137)" />
+                  <ellipse cx="171" cy="139" rx="1.5" ry="4" fill="#FDBCB4" transform="rotate(-45 171 139)" />
+                  {/* Thumb tucked - Smaller */}
+                  <ellipse cx="171" cy="147" rx="1.5" ry="3" fill="#FDBCB4" transform="rotate(30 171 147)" />
                 </>
               )}
+              {handPosition === 'idle' && (
+                <>
+                  {/* Natural relaxed fingers - Smaller */}
+                  <ellipse cx="169" cy="163" rx="1.5" ry="3" fill="#FDBCB4" transform="rotate(5 169 163)" />
+                  <ellipse cx="167" cy="165" rx="1.5" ry="4" fill="#FDBCB4" transform="rotate(-5 167 165)" />
+                  <ellipse cx="165" cy="163" rx="1.5" ry="3" fill="#FDBCB4" transform="rotate(-15 165 163)" />
+                  <ellipse cx="163" cy="165" rx="1.5" ry="2.5" fill="#FDBCB4" transform="rotate(-25 163 165)" />
+                  {/* Thumb - Smaller */}
+                  <ellipse cx="172" cy="157" rx="1.5" ry="3" fill="#FDBCB4" transform="rotate(15 172 157)" />
+                </>
+              )}
+              {handPosition === 'gripping' && (
+                <>
+                  {/* Gripping fingers - curved around - Smaller */}
+                  <ellipse cx="167" cy="160" rx="1.5" ry="2.5" fill="#FDBCB4" transform="rotate(15 167 160)" />
+                  <ellipse cx="165" cy="161" rx="1.5" ry="2.5" fill="#FDBCB4" transform="rotate(5 165 161)" />
+                  <ellipse cx="163" cy="160" rx="1.5" ry="2.5" fill="#FDBCB4" transform="rotate(-5 163 160)" />
+                  <ellipse cx="161" cy="161" rx="1.5" ry="2.5" fill="#FDBCB4" transform="rotate(-15 161 161)" />
+                  {/* Thumb for grip - Smaller */}
+                  <ellipse cx="171" cy="160" rx="1.5" ry="3" fill="#FDBCB4" transform="rotate(25 171 160)" />
+                </>
+              )}
+                        </g>
+            
+            {/* Money on the Floor/Ground */}
+            {/* Coins scattered on the ground around the character */}
+            <g>
+              {/* Coin 1 - Left side of character */}
+              <ellipse 
+                cx="85" 
+                cy="260" 
+                rx="8" 
+                ry="8" 
+                fill="#FFD700"
+                stroke="#DAA520"
+                strokeWidth="1"
+                style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }}
+              />
+              <text x="85" y="264" textAnchor="middle" fontSize="8" fill="#B8860B" fontWeight="bold">$</text>
+              
+              {/* Coin 2 - Right side of character */}
+              <ellipse 
+                cx="155" 
+                cy="258" 
+                rx="6" 
+                ry="6" 
+                fill="#C0C0C0"
+                stroke="#A8A8A8"
+                strokeWidth="1"
+                style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }}
+              />
+              <text x="155" y="261" textAnchor="middle" fontSize="6" fill="#696969" fontWeight="bold">¢</text>
+              
+              {/* Coin 3 - Behind character */}
+              <ellipse 
+                cx="120" 
+                cy="265" 
+                rx="7" 
+                ry="7" 
+                fill="#FFD700"
+                stroke="#DAA520"
+                strokeWidth="1"
+                style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }}
+              />
+              <text x="120" y="269" textAnchor="middle" fontSize="7" fill="#B8860B" fontWeight="bold">$</text>
+              
+              {/* Bill on the ground - Left side */}
+              <rect 
+                x="65" 
+                y="250" 
+                width="25" 
+                height="15" 
+                rx="2" 
+                ry="2" 
+                fill="#90EE90"
+                stroke="#228B22"
+                strokeWidth="0.5"
+                style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }}
+              />
+              <text x="77.5" y="258" textAnchor="middle" fontSize="8" fill="#006400" fontWeight="bold">$5</text>
+              
+              {/* Bill on the ground - Right side */}
+              <rect 
+                x="170" 
+                y="252" 
+                width="20" 
+                height="12" 
+                rx="1" 
+                ry="1" 
+                fill="#90EE90"
+                stroke="#228B22"
+                strokeWidth="0.5"
+                style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }}
+              />
+              <text x="180" y="259" textAnchor="middle" fontSize="7" fill="#006400" fontWeight="bold">$1</text>
+              
+              {/* Additional small coins scattered */}
+              <ellipse 
+                cx="95" 
+                cy="270" 
+                rx="5" 
+                ry="5" 
+                fill="#C0C0C0"
+                stroke="#A8A8A8"
+                strokeWidth="1"
+                style={{ filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.2))' }}
+              />
+              <text x="95" y="273" textAnchor="middle" fontSize="5" fill="#696969" fontWeight="bold">¢</text>
+              
+              <ellipse 
+                cx="145" 
+                cy="268" 
+                rx="6" 
+                ry="6" 
+                fill="#FFD700"
+                stroke="#DAA520"
+                strokeWidth="1"
+                style={{ filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.2))' }}
+              />
+              <text x="145" y="271" textAnchor="middle" fontSize="6" fill="#B8860B" fontWeight="bold">$</text>
             </g>
           </svg>
+            
 
-          {/* Enhanced Floating Elements */}
-          {emotion === 'celebrating' && (
-            <div className="absolute inset-0 pointer-events-none">
-              {[...Array(12)].map((_, i) => (
-                <div
-                  key={i}
-                  className="absolute text-2xl animate-bounce"
-                  style={{
-                    top: `${5 + Math.sin(currentFrame + i) * 25}%`,
-                    left: `${5 + Math.cos(currentFrame + i) * 35}%`,
-                    animationDelay: `${i * 0.1}s`,
-                    animationDuration: '1s',
-                    filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'
-                  }}
-                >
-                  {['🎉', '⭐', '✨', '🎊', '💫', '🌟', '🎈', '🎁', '🏆', '💎', '🔥', '⚡'][i]}
-                </div>
-              ))}
-            </div>
-          )}
+            {/* Enhanced Floating Elements */}
+            {emotion === 'celebrating' && (
+              <div className="absolute inset-0 pointer-events-none">
+                {[...Array(12)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="absolute text-2xl animate-bounce"
+                    style={{
+                      top: `${5 + Math.sin(currentFrame + i) * 25}%`,
+                      left: `${5 + Math.cos(currentFrame + i) * 35}%`,
+                      animationDelay: `${i * 0.1}s`,
+                      animationDuration: '1s',
+                      filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'
+                    }}
+                  >
+                    {['💰', '💵', '🪙', '💎', '⭐', '✨', '🎉', '🎊', '💫', '🌟', '🎈', '🏆'][i]}
+                  </div>
+                ))}
+              </div>
+            )}
 
           {/* Enhanced Thinking bubbles */}
           {emotion === 'thinking' && (

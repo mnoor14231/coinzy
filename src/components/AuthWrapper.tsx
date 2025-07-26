@@ -24,13 +24,13 @@ const AuthWrapper: React.FC<AuthWrapperProps> = ({ children, requiredRole = 'any
     if (!isMounted) return;
 
     // Allow access to home page without authentication
-    if (pathname === '/home') {
+    if (pathname === '/') {
       return;
     }
 
     // Redirect to home if not authenticated
     if (!isAuthenticated) {
-      router.replace('/home');
+      router.replace('/');
       return;
     }
 
@@ -58,7 +58,7 @@ const AuthWrapper: React.FC<AuthWrapperProps> = ({ children, requiredRole = 'any
   }
 
   // Show loading for non-home pages while checking auth
-  if (pathname !== '/home' && !isAuthenticated) {
+  if (pathname !== '/' && !isAuthenticated) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center">
         <div className="text-center text-white">
@@ -70,7 +70,7 @@ const AuthWrapper: React.FC<AuthWrapperProps> = ({ children, requiredRole = 'any
   }
 
   // Show loading for role mismatch
-  if (pathname !== '/home' && requiredRole !== 'any' && currentUser?.role !== requiredRole) {
+  if (pathname !== '/' && requiredRole !== 'any' && currentUser?.role !== requiredRole) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center">
         <div className="text-center text-white">
