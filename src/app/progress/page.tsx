@@ -22,7 +22,9 @@ const ProgressPage: React.FC = () => {
     questions, 
     streak, 
     bankBalance,
-    transactions
+    transactions,
+    addRewardPoints,
+    rewardPoints
   } = useGameStore();
   
   const { selectedCharacter } = useCharacterStore();
@@ -52,13 +54,19 @@ const ProgressPage: React.FC = () => {
       // Store the current count to prevent repeated celebrations
       localStorage.setItem('lastCelebratedCount', unlockedAchievements.length.toString());
       
+      // Add reward points for new achievements (50 points per achievement)
+      const newAchievementsCount = unlockedAchievements.length - parseInt(localStorage.getItem('lastCelebratedCount') || '0');
+      if (newAchievementsCount > 0) {
+        addRewardPoints(newAchievementsCount * 50, `إنجاز جديد: ${newAchievementsCount} إنجاز`);
+      }
+      
       setShowCelebration(true);
       setCharacterEmotion('celebrating');
       setIsVoiceProcessing(true);
       
       setTimeout(() => {
         speakWithCharacter(
-          `مبروك! حققت ${unlockedAchievements.length} إنجاز رائع! أنت نجم حقيقي!`,
+          `مبروك! حققت ${unlockedAchievements.length} إنجاز رائع! حصلت على ${newAchievementsCount * 50} نقطة مكافأة! أنت نجم حقيقي!`,
           selectedCharacter,
           'celebrating'
         );
@@ -70,7 +78,7 @@ const ProgressPage: React.FC = () => {
         setIsVoiceProcessing(false);
       }, 6000); // Longer delay to ensure voice completes
     }
-  }, [unlockedAchievements.length, selectedCharacter, speakWithCharacter, isVoiceProcessing]);
+  }, [unlockedAchievements.length, selectedCharacter, speakWithCharacter, isVoiceProcessing, addRewardPoints]);
   
   const stats = [
     {
@@ -135,14 +143,17 @@ const ProgressPage: React.FC = () => {
   };
 
   const getMotivationalMessage = () => {
+    const lockedAchievements = achievements.filter(a => !a.unlocked).length;
+    const totalRewardPoints = lockedAchievements * 50;
+    
     if (unlockedAchievements.length === 0) {
-      return 'ابدأ رحلتك التعليمية لتحقق إنجازات رائعة!';
+      return `ابدأ رحلتك التعليمية! ${lockedAchievements} إنجاز ينتظرك مع ${totalRewardPoints} نقطة مكافأة!`;
     } else if (unlockedAchievements.length < 3) {
-      return 'أنت في بداية رائعة! استمر في التعلم والادخار!';
+      return `أحسنت! ${lockedAchievements} إنجاز آخر ينتظرك مع ${totalRewardPoints} نقطة مكافأة!`;
     } else if (unlockedAchievements.length < 5) {
-      return 'أداء ممتاز! أنت تحقق تقدماً رائعاً في تعلم المال!';
+      return `أداء ممتاز! ${lockedAchievements} إنجاز متبقي مع ${totalRewardPoints} نقطة مكافأة!`;
     } else {
-      return 'أنت نجم حقيقي! إنجازاتك ملهمة للجميع!';
+      return `أنت نجم حقيقي! ${lockedAchievements} إنجاز متبقي مع ${totalRewardPoints} نقطة مكافأة!`;
     }
   };
 
@@ -197,6 +208,18 @@ const ProgressPage: React.FC = () => {
               >
                 <LogOut size={20} />
               </button>
+            </div>
+            
+            {/* Motivational Banner */}
+            <div className="bg-gradient-to-r from-yellow-400/20 to-orange-500/20 rounded-xl p-4 mb-6 border-2 border-yellow-400/30 sparkle">
+              <div className="flex items-center justify-center gap-3 mb-2">
+                <span className="text-3xl animate-pulse">🎁</span>
+                <h2 className="text-xl font-bold text-yellow-200">اكمل المهام واحصل على مكافآت رائعة!</h2>
+                <span className="text-3xl animate-pulse">⭐</span>
+              </div>
+              <p className="text-yellow-100 text-sm">
+                كل إنجاز = 50 نقطة مكافأة | كل درس = 100 نقطة | كل مهمة = 50 نقطة
+              </p>
             </div>
             <h1 className="text-4xl font-bold text-white mb-3 drop-shadow-lg">
               <span className="gradient-text">إنجازاتي</span>
@@ -258,6 +281,21 @@ const ProgressPage: React.FC = () => {
               </div>
             ))}
           </div>
+          
+          {/* Reward Points Summary */}
+          <div className="ultra-modern-card sparkle modern-shadow bg-gradient-to-r from-yellow-400/20 to-orange-500/20 border-2 border-yellow-400/30">
+            <div className="p-6 text-center">
+              <div className="flex items-center justify-center gap-3 mb-3">
+                <span className="text-4xl animate-pulse">🎁</span>
+                <h3 className="text-2xl font-bold text-yellow-200">نقاط المكافآت</h3>
+                <span className="text-4xl animate-pulse">⭐</span>
+              </div>
+              <div className="text-4xl font-bold text-yellow-100 mb-2">{rewardPoints}</div>
+              <p className="text-yellow-200 text-sm">
+                استخدم نقاطك في بنك بابا لشراء مكافآت رائعة!
+              </p>
+            </div>
+          </div>
 
           {/* Enhanced Achievement Filters */}
           <div className="ultra-modern-card sparkle modern-shadow">
@@ -300,12 +338,34 @@ const ProgressPage: React.FC = () => {
               return (
                 <div
                   key={achievement.id}
-                  className={`ultra-modern-card modern-shadow transform transition-all duration-500 hover:scale-105 ${
+                  className={`ultra-modern-card modern-shadow transform transition-all duration-500 hover:scale-105 cursor-pointer ${
                     achievement.unlocked 
                       ? 'border-2 border-yellow-400 bg-gradient-to-br from-yellow-400/20 to-orange-500/20 sparkle' 
                       : 'hover:border-purple-400/50'
                   }`}
                   style={{animationDelay: `${index * 0.1}s`}}
+                  onClick={() => {
+                    if (!achievement.unlocked && selectedCharacter && !isVoiceProcessing) {
+                      setCharacterEmotion('encouraging');
+                      setIsVoiceProcessing(true);
+                      
+                      const progress = getAchievementProgress(achievement);
+                      const remaining = progress.target - progress.current;
+                      
+                      setTimeout(() => {
+                        speakWithCharacter(
+                          `هذا الإنجاز "${achievement.title}" يحتاج ${remaining} خطوة أخرى! اكمل المهمة واحصل على 50 نقطة مكافأة!`,
+                          selectedCharacter,
+                          'encouraging'
+                        );
+                      }, 500);
+                      
+                      setTimeout(() => {
+                        setCharacterEmotion('idle');
+                        setIsVoiceProcessing(false);
+                      }, 4000);
+                    }
+                  }}
                 >
                   <div className="p-6">
                     <div className="flex items-start gap-4">
@@ -345,6 +405,22 @@ const ProgressPage: React.FC = () => {
                               >
                                 <div className="absolute inset-0 bg-white/30 animate-pulse" />
                               </div>
+                            </div>
+                            
+                            {/* Encouragement Message */}
+                            <div className="mt-3 p-3 bg-gradient-to-r from-yellow-400/20 to-orange-500/20 rounded-lg border border-yellow-400/30">
+                              <div className="flex items-center gap-2 text-yellow-200 text-sm">
+                                <span className="text-lg">🎁</span>
+                                <span className="font-bold">اكمل هذا الإنجاز واحصل على 50 نقطة مكافأة!</span>
+                              </div>
+                              <p className="text-yellow-100 text-xs mt-1">
+                                {progress.current === 0 
+                                  ? 'ابدأ الآن! كل خطوة تقربك من المكافأة' 
+                                  : progress.current < progress.target 
+                                    ? `أحسنت! أنت على الطريق الصحيح. ${progress.target - progress.current} خطوة أخرى للوصول!`
+                                    : 'أكمل الخطوة الأخيرة واحصل على مكافأتك!'
+                                }
+                              </p>
                             </div>
                           </div>
                         )}

@@ -30,7 +30,9 @@ const ParentPage: React.FC = () => {
     updateWeeklyProgress,
     markWeeklyGoalAchieved,
     completeFamilyTask,
-    markNotificationAsRead
+    markNotificationAsRead,
+    depositRealMoney,
+    addRewardPoints
   } = useGameStore();
   
   const { logout, currentUser } = useAuthStore();
@@ -42,6 +44,16 @@ const ParentPage: React.FC = () => {
     description: '',
     totalAmount: 200
   });
+  
+  // Money transfer state
+  const [transferAmount, setTransferAmount] = useState<string>('');
+  const [transferMessage, setTransferMessage] = useState<string>('');
+  const [isTransferring, setIsTransferring] = useState<boolean>(false);
+  const [transferHistory, setTransferHistory] = useState<Array<{
+    amount: number;
+    message?: string;
+    date: Date;
+  }>>([]);
   
   const completedQuestions = questions.filter(q => q.completed);
   const unlockedAchievements = achievements.filter(a => a.unlocked);
@@ -115,6 +127,49 @@ const ParentPage: React.FC = () => {
 
   const handleCompleteTask = (taskId: string) => {
     completeFamilyTask(taskId);
+  };
+
+  const handleQuickTransfer = (amount: number) => {
+    handleTransfer(amount, 'مكافأة سريعة من الأهل');
+  };
+
+  const handleCustomTransfer = () => {
+    const amount = Number(transferAmount);
+    if (amount > 0) {
+      handleTransfer(amount, transferMessage || 'تحويل من الأهل');
+    }
+  };
+
+  const handleTransfer = (amount: number, message: string) => {
+    setIsTransferring(true);
+    
+    // Simulate transfer delay
+    setTimeout(() => {
+      // Transfer money to child's bank account
+      depositRealMoney(amount, message || 'تحويل من الأهل');
+      
+      // Add reward points (10 riyal = 1 point)
+      const rewardPoints = Math.floor(amount / 10);
+      if (rewardPoints > 0) {
+        addRewardPoints(rewardPoints, `تحويل من الأهل: ${amount} ريال`);
+      }
+      
+      // Add to transfer history
+      setTransferHistory(prev => [{
+        amount,
+        message: message || undefined,
+        date: new Date()
+      }, ...prev]);
+      
+      // Reset form
+      setTransferAmount('');
+      setTransferMessage('');
+      setIsTransferring(false);
+      
+      // Show success message
+      setShowCelebration(true);
+      setTimeout(() => setShowCelebration(false), 3000);
+    }, 1500);
   };
 
   const handleLogout = () => {
@@ -584,6 +639,192 @@ const ParentPage: React.FC = () => {
                     style={{ width: `${(familyTasks.filter(t => t.completed).length / familyTasks.length) * 100}%` }}
                   />
                 </div>
+              </div>
+            </div>
+          </div>
+
+                    {/* Money Transfer to Child - Enhanced UI/UX */}
+          <div className="ultra-modern-card border-4 border-blue-500 relative overflow-hidden">
+            {/* Success Animation Overlay */}
+            {showCelebration && (
+              <div className="absolute inset-0 bg-green-600/90 backdrop-blur-sm z-20 flex items-center justify-center">
+                <div className="text-center bg-white/95 rounded-2xl p-8 shadow-2xl border-4 border-green-400">
+                  <div className="text-6xl animate-bounce mb-4">🎉</div>
+                  <div className="text-2xl font-bold text-green-800 mb-2">تم التحويل بنجاح!</div>
+                  <div className="text-green-700 text-lg">سيظهر المال في حساب طفلك فوراً</div>
+                  <div className="mt-4 text-green-600 text-sm">
+                    💰 تم إضافة المال إلى رصيد طفلك
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            <div className="p-6">
+              <h3 className="text-2xl font-bold text-white mb-6 text-center flex items-center justify-center gap-3">
+                <Gift className="text-blue-400" size={28} />
+                إرسال مال لطفلك
+              </h3>
+              
+              <div className="text-center mb-6">
+                <div className="text-6xl mb-4 animate-pulse">💰</div>
+                <p className="text-white/90 text-lg mb-2">
+                  أرسل مالاً لطفلك مباشرة إلى حسابه في البنك
+                </p>
+                <div className="bg-blue-500/20 border border-blue-400/50 rounded-lg p-3 mb-4">
+                  <p className="text-blue-300 text-sm font-bold">
+                    💡 سيحصل طفلك على نقاط مكافآت: 10 ريال = 1 نقطة
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                {/* Quick Transfer Options */}
+                <div>
+                  <h4 className="text-lg font-bold text-white mb-4 text-center">
+                    تحويلات سريعة
+                  </h4>
+                  <div className="grid grid-cols-3 gap-3">
+                    {[10, 20, 50].map((amount) => (
+                      <button
+                        key={amount}
+                        onClick={() => handleQuickTransfer(amount)}
+                        disabled={isTransferring}
+                        className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:from-gray-500 disabled:to-gray-600 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg border-2 border-white/20"
+                      >
+                        <div className="text-2xl mb-1 animate-bounce">💵</div>
+                        <div className="text-lg">{amount} ريال</div>
+                        <div className="text-xs opacity-80 bg-white/20 rounded-full px-2 py-1 mt-1">
+                          +{amount/10} نقطة
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Divider */}
+                <div className="flex items-center">
+                  <div className="flex-1 h-px bg-white/20"></div>
+                  <span className="px-4 text-white/60 text-sm">أو</span>
+                  <div className="flex-1 h-px bg-white/20"></div>
+                </div>
+
+                {/* Custom Amount Transfer */}
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
+                  <h4 className="text-lg font-bold text-white mb-4 text-center flex items-center justify-center gap-2">
+                    <span className="text-2xl">✏️</span>
+                    مبلغ مخصص
+                  </h4>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-white mb-2 font-bold">المبلغ (ريال)</label>
+                      <div className="relative">
+                        <input
+                          type="number"
+                          value={transferAmount}
+                          onChange={(e) => setTransferAmount(e.target.value)}
+                          className="w-full p-4 border-2 border-white/30 rounded-xl focus:border-blue-400 focus:outline-none bg-white/10 backdrop-blur-sm text-white placeholder-white/60 text-center text-xl font-bold"
+                          placeholder="0"
+                          min={1}
+                          disabled={isTransferring}
+                        />
+                        <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60">
+                          💰
+                        </div>
+                      </div>
+                      {Number(transferAmount) > 0 && (
+                        <div className="mt-3 p-3 bg-green-500/20 border border-green-400/50 rounded-lg">
+                          <p className="text-green-300 text-sm text-center font-bold">
+                            ✅ سيحصل طفلك على {Math.floor(Number(transferAmount)/10)} نقطة مكافأة
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div>
+                      <label className="block text-white mb-2 font-bold">رسالة للطفل (اختياري)</label>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={transferMessage}
+                          onChange={(e) => setTransferMessage(e.target.value)}
+                          className="w-full p-4 pr-16 border-2 border-white/30 rounded-xl focus:border-blue-400 focus:outline-none bg-white/10 backdrop-blur-sm text-white placeholder-white/60"
+                          placeholder="أحسنت! هذا مكافأة لك"
+                          maxLength={50}
+                          disabled={isTransferring}
+                        />
+                        <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60">
+                          💬
+                        </div>
+                        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/70 text-xs font-bold bg-white/30 px-2 py-1 rounded-full border border-white/20">
+                          {transferMessage.length}/50
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <button
+                      onClick={handleCustomTransfer}
+                      disabled={!transferAmount || Number(transferAmount) <= 0 || isTransferring}
+                      className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 disabled:bg-gray-500 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg border-2 border-white/20 relative overflow-hidden"
+                    >
+                      {isTransferring ? (
+                        <div className="flex items-center justify-center gap-2">
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                          <span>⏳ جاري الإرسال...</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center gap-2">
+                          <span className="text-2xl">💸</span>
+                          <span>إرسال المال لطفلك</span>
+                        </div>
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Transfer Status */}
+                {isTransferring && (
+                  <div className="bg-blue-500/20 border border-blue-400/50 rounded-lg p-4 text-center">
+                    <div className="flex items-center justify-center gap-3 mb-2">
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-400"></div>
+                      <span className="text-blue-300 font-bold">جاري تحويل المال...</span>
+                    </div>
+                    <p className="text-blue-200 text-sm">يرجى الانتظار، سيتم إرسال المال لطفلك قريباً</p>
+                  </div>
+                )}
+
+                {/* Transfer History */}
+                {transferHistory.length > 0 && (
+                  <div className="mt-6">
+                    <h4 className="text-lg font-bold text-white mb-4 text-center flex items-center justify-center gap-2">
+                      <span className="text-2xl">📋</span>
+                      آخر التحويلات
+                    </h4>
+                    <div className="space-y-3 max-h-40 overflow-y-auto custom-scrollbar">
+                      {transferHistory.slice(0, 5).map((transfer, index) => (
+                        <div key={index} className="flex items-center justify-between p-4 bg-green-500/20 rounded-xl border border-green-400/30 hover:bg-green-500/30 transition-all duration-300">
+                          <div className="flex items-center gap-3">
+                            <span className="text-2xl animate-pulse">💸</span>
+                            <div>
+                              <div className="font-bold text-white text-lg">{transfer.amount} ريال</div>
+                              {transfer.message && (
+                                <div className="text-green-200 text-sm">{transfer.message}</div>
+                              )}
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-green-300 text-sm">
+                              {new Date(transfer.date).toLocaleDateString('ar-SA')}
+                            </div>
+                            <div className="text-blue-300 text-xs bg-blue-500/20 rounded-full px-2 py-1 mt-1">
+                              +{Math.floor(transfer.amount/10)} نقطة
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

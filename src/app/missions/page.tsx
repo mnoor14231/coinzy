@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation';
 import Confetti from 'react-confetti';
 
 const MissionsPage: React.FC = () => {
-  const { dailyMissions, streak, addXP, weeklySavingGoal, weeklyProgress } = useGameStore();
+  const { dailyMissions, streak, addXP, addRewardPoints, weeklySavingGoal, weeklyProgress } = useGameStore();
   const { selectedCharacter } = useCharacterStore();
   const { logout } = useAuthStore();
   const { speakWithCharacter, isSpeaking, isProcessing } = useEnhancedVoice();
@@ -59,10 +59,13 @@ const MissionsPage: React.FC = () => {
     playSound('celebration', selectedCharacter);
     addXP(reward);
     
+    // Add reward points for completing mission (50 points per mission)
+    addRewardPoints(50, `إكمال مهمة يومية`);
+    
     if (selectedCharacter) {
       setTimeout(() => {
         speakWithCharacter(
-          `رائع! حصلت على ${reward} نقطة خبرة!`,
+          `رائع! حصلت على ${reward} نقطة خبرة و 50 نقطة مكافأة!`,
           selectedCharacter,
           'celebrating'
         );

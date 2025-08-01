@@ -13,6 +13,8 @@ import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from 'recharts';
 import { PiggyBank, TrendingUp, Target, Gift, Plus, Minus, LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Confetti from 'react-confetti';
+import RewardSystem from '@/components/RewardSystem';
+import Image from 'next/image';
 
 const BankPage: React.FC = () => {
   const { 
@@ -23,7 +25,8 @@ const BankPage: React.FC = () => {
     depositRealMoney,
     withdrawRealMoney,
     setSavingsGoal,
-    markNotificationAsRead
+    markNotificationAsRead,
+    rewardPoints
   } = useGameStore();
   
   const { currentUser, logout } = useAuthStore();
@@ -45,6 +48,7 @@ const BankPage: React.FC = () => {
   const [showMilestoneModal, setShowMilestoneModal] = useState<{ show: boolean, amount: number, message: string }>({ show: false, amount: 0, message: '' });
   const [characterEmotion, setCharacterEmotion] = useState<'idle' | 'happy' | 'excited' | 'thinking' | 'speaking' | 'sad' | 'encouraging' | 'celebrating'>('idle');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showRewardSystem, setShowRewardSystem] = useState(false);
 
   const progressPercentage = Math.min((bankBalance / savingsGoal) * 100, 100);
   const unreadNotifications = familyNotifications.filter(n => !n.read).length;
@@ -244,7 +248,18 @@ const BankPage: React.FC = () => {
           {/* Header */}
           <div className="text-center py-6">
             <div className="flex justify-between items-center mb-4">
-              <div></div>
+              <button
+                onClick={() => setShowRewardSystem(true)}
+                className="p-3 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 text-white hover:from-yellow-500 hover:to-orange-600 transition-all duration-300 shadow-xl transform hover:scale-110 animate-pulse relative"
+                title="نظام المكافآت"
+              >
+                <Gift size={20} className="animate-bounce" />
+                {rewardPoints > 0 && (
+                  <div className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold animate-pulse">
+                    {rewardPoints > 99 ? '99+' : rewardPoints}
+                  </div>
+                )}
+              </button>
               <div className="relative">
                 <div className="absolute left-1/2 top-6 -translate-x-1/2 w-24 h-24 bg-yellow-300/60 blur-2xl z-0" />
                 <div className="text-6xl emoji-bounce relative z-10 drop-shadow-[0_4px_32px_rgba(59,130,246,0.7)]">🏦</div>
@@ -265,18 +280,261 @@ const BankPage: React.FC = () => {
             </p>
           </div>
 
-          {/* Character */}
-          {selectedCharacter && (
+          {/* Alinma Card - Bigger */}
             <div className="flex justify-center mb-6">
-              <Amazing3DCharacter
-                character={selectedCharacter}
-                emotion={characterEmotion}
-                isSpeaking={isSpeaking}
-                isProcessing={isProcessing}
-                size="medium"
-              />
+            <div className="relative group">
+              {/* Card Container - Stable */}
+              <div className="relative perspective-1000">
+                {/* Card Shadow */}
+                <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-[28rem] h-8 bg-black/20 rounded-full blur-xl animate-pulse"></div>
+                
+                {/* Main Card Container - Much Bigger */}
+                <div className="relative w-[28rem] h-72 overflow-hidden transform transition-all duration-1000 hover:scale-105">
+                  {/* Alinma Card Image - Animated */}
+                  <Image
+                    src="/alinma.png"
+                    alt="بطاقة العليما"
+                    width={448}
+                    height={288}
+                    className="w-full h-full object-contain animate-card-circle"
+                  />
+                  
+                  {/* Shimmer Effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 translate-x-[-100%] animate-shimmer"></div>
             </div>
-          )}
+                
+                {/* Floating Elements */}
+                <div className="absolute -top-4 -right-4 w-6 h-6 bg-yellow-400 rounded-full animate-bounce"></div>
+                <div className="absolute -bottom-4 -left-4 w-5 h-5 bg-green-400 rounded-full animate-bounce delay-300"></div>
+                <div className="absolute top-1/2 -right-5 w-4 h-4 bg-blue-400 rounded-full animate-bounce delay-600"></div>
+                <div className="absolute top-1/2 -left-5 w-4 h-4 bg-purple-400 rounded-full animate-bounce delay-900"></div>
+              </div>
+              
+              {/* Card Info */}
+              <div className="text-center mt-4">
+                <div className="text-black text-base font-medium mb-1">بطاقة الدفع الخاصة بك</div>
+                <div className="text-black text-sm">استخدمها للتسوق والمدفوعات الآمنة</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Small Character - Looking at the child (No Background) */}
+          <div className="absolute top-20 left-20 z-10">
+            <div className="relative">
+              {/* Character Container - No Background */}
+              <div className="w-24 h-24 transform scale-75 hover:scale-90 transition-transform duration-300">
+                {selectedCharacter && (
+                  <div className="relative w-full h-full">
+                    {/* Custom Character SVG - Only Body and Face */}
+                    <svg viewBox="0 0 240 280" className="w-full h-full">
+                      {/* Character Body - Enhanced Rectangle */}
+                      <rect 
+                        x="75" 
+                        y="180" 
+                        width="90" 
+                        height="80" 
+                        rx="15" 
+                        ry="15" 
+                        fill="#4A90E2" 
+                        opacity="0.8"
+                        style={{
+                          filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))'
+                        }}
+                      />
+                      
+                      {/* Body highlight for 3D effect */}
+                      <rect 
+                        x="80" 
+                        y="185" 
+                        width="75" 
+                        height="70" 
+                        rx="12" 
+                        ry="12" 
+                        fill="rgba(255,255,255,0.2)"
+                      />
+                      
+                      {/* Body outline for definition */}
+                      <rect 
+                        x="75" 
+                        y="180" 
+                        width="90" 
+                        height="80" 
+                        rx="15" 
+                        ry="15" 
+                        fill="none"
+                        stroke="#3A7BC8"
+                        strokeWidth="2"
+                        opacity="0.6"
+                      />
+                      
+                      {/* Character Head - Better Rounded Shape */}
+                      <rect 
+                        x="45" 
+                        y="45" 
+                        width="150" 
+                        height="150" 
+                        rx="75" 
+                        ry="75" 
+                        fill={characterEmotion === 'celebrating' ? '#FFD700' : characterEmotion === 'sad' ? '#87CEEB' : '#FFA07A'}
+                        style={{
+                          filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.3))'
+                        }}
+                      />
+                      
+                      {/* Head outline for definition */}
+                      <rect 
+                        x="45" 
+                        y="45" 
+                        width="150" 
+                        height="150" 
+                        rx="75" 
+                        ry="75" 
+                        fill="none"
+                        stroke={characterEmotion === 'celebrating' ? '#E6C200' : characterEmotion === 'sad' ? '#6BA5C7' : '#E68A5C'}
+                        strokeWidth="3"
+                        opacity="0.7"
+                      />
+                      
+                      {/* Enhanced Friendly Eyes */}
+                      {/* Left Eye */}
+                      <ellipse 
+                        cx="95" 
+                        cy="100" 
+                        rx="11" 
+                        ry="13"
+                        fill="#000"
+                        style={{
+                          filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.2))'
+                        }}
+                      />
+                      
+                      {/* Right Eye */}
+                      <ellipse 
+                        cx="145" 
+                        cy="100" 
+                        rx="11" 
+                        ry="13"
+                        fill="#000"
+                        style={{
+                          filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.2))'
+                        }}
+                      />
+                      
+                      {/* Enhanced friendly highlights */}
+                      <circle cx="92" cy="96" r="4" fill="#fff" />
+                      <circle cx="142" cy="96" r="4" fill="#fff" />
+                      
+                      {/* Subtle secondary highlights */}
+                      <circle cx="94" cy="102" r="2" fill="#fff" opacity="0.7" />
+                      <circle cx="144" cy="102" r="2" fill="#fff" opacity="0.7" />
+                      
+                      {/* Tiny sparkle highlights */}
+                      <circle cx="90" cy="94" r="1" fill="#fff" opacity="0.9" />
+                      <circle cx="140" cy="94" r="1" fill="#fff" opacity="0.9" />
+
+                      {/* Enhanced Expressive Eyebrows */}
+                      {/* Left Eyebrow */}
+                      <path 
+                        d={characterEmotion === 'thinking' ? "M 80 82 Q 95 72 110 79" : 
+                            characterEmotion === 'sad' ? "M 80 87 Q 95 92 110 85" :
+                            characterEmotion === 'happy' ? "M 80 79 Q 95 72 110 77" :
+                            characterEmotion === 'excited' ? "M 80 77 Q 95 70 110 75" :
+                            characterEmotion === 'celebrating' ? "M 80 76 Q 95 69 110 74" :
+                            "M 80 81 Q 95 75 110 80"} 
+                        stroke="#8B4513" 
+                        strokeWidth="4" 
+                        fill="none"
+                        strokeLinecap="round"
+                        className="transition-all duration-500"
+                        style={{ 
+                          filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.2))'
+                        }}
+                      />
+                      
+                      {/* Right Eyebrow */}
+                      <path 
+                        d={characterEmotion === 'thinking' ? "M 130 79 Q 145 72 160 82" : 
+                            characterEmotion === 'sad' ? "M 130 85 Q 145 92 160 87" :
+                            characterEmotion === 'happy' ? "M 130 77 Q 145 72 160 79" :
+                            characterEmotion === 'excited' ? "M 130 75 Q 145 70 160 77" :
+                            characterEmotion === 'celebrating' ? "M 130 74 Q 145 69 160 76" :
+                            "M 130 80 Q 145 75 160 81"} 
+                        stroke="#8B4513" 
+                        strokeWidth="4" 
+                        fill="none"
+                        strokeLinecap="round"
+                        className="transition-all duration-500"
+                        style={{ 
+                          filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.2))'
+                        }}
+                      />
+
+                      {/* Cute Small Nose */}
+                      <ellipse 
+                        cx="120" 
+                        cy="115" 
+                        rx="3" 
+                        ry="6" 
+                        fill="#FF8C69"
+                        style={{
+                          filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))'
+                        }}
+                      />
+                      
+                      {/* Small nose highlight */}
+                      <ellipse 
+                        cx="119" 
+                        cy="113" 
+                        rx="1" 
+                        ry="3" 
+                        fill="rgba(255,255,255,0.3)"
+                      />
+
+                      {/* Enhanced Friendly Mouth */}
+                      <path 
+                        d={
+                          characterEmotion === 'sad' ? "M 105 143 Q 120 128 135 143" :
+                          characterEmotion === 'thinking' ? "M 107 140 Q 120 141 133 140" :
+                          characterEmotion === 'excited' ? "M 103 135 Q 120 145 137 135" :
+                          characterEmotion === 'celebrating' ? "M 103 134 Q 120 147 137 134" :
+                          "M 105 137 Q 120 143 135 137"
+                        }
+                        stroke="#8B4513" 
+                        strokeWidth="4" 
+                        fill="none"
+                        strokeLinecap="round"
+                        className="transition-all duration-300"
+                        style={{ 
+                          filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.2))',
+                          strokeLinejoin: 'round'
+                        }}
+                      />
+
+                      {/* Enhanced Cheeks for happy emotions */}
+                      {(characterEmotion === 'happy' || characterEmotion === 'celebrating' || characterEmotion === 'excited') && (
+                        <>
+                          <circle cx="75" cy="125" r="12" fill="#FFB6C1" opacity="0.7" />
+                          <circle cx="165" cy="125" r="12" fill="#FFB6C1" opacity="0.7" />
+                          <circle cx="77" cy="123" r="6" fill="rgba(255,255,255,0.4)" />
+                          <circle cx="167" cy="123" r="6" fill="rgba(255,255,255,0.4)" />
+                        </>
+                      )}
+                    </svg>
+                  </div>
+                )}
+              </div>
+              
+              {/* Speech Bubble */}
+              {isSpeaking && (
+                <div className="absolute -top-12 -right-2 bg-white/95 backdrop-blur-sm rounded-lg p-2 shadow-lg border border-gray-200 max-w-32">
+                  <div className="text-xs text-gray-700 text-center">
+                    👀 أنظر إلى بطاقتك!
+                  </div>
+                  <div className="absolute bottom-0 right-3 w-2 h-2 bg-white/95 transform rotate-45 border-r border-b border-gray-200"></div>
+                </div>
+              )}
+            </div>
+          </div>
 
           {/* Bank Balance - Big Display */}
           <div className="card sparkle relative overflow-hidden border-4 border-pink-200 shadow-xl">
@@ -327,15 +585,37 @@ const BankPage: React.FC = () => {
                     .map(notification => (
                     <div 
                       key={notification.id}
-                      className="bg-white/50 p-3 rounded-xl cursor-pointer hover:bg-white/70 transition-colors"
+                      className={`p-3 rounded-xl cursor-pointer hover:bg-white/70 transition-colors ${
+                        notification.type === 'parent_transfer' 
+                          ? 'bg-gradient-to-r from-green-100 to-blue-100 border-2 border-green-300' 
+                          : 'bg-white/50'
+                      }`}
                       onClick={() => markNotificationAsRead(notification.id)}
                     >
-                      <p className="text-orange-700 text-sm font-medium">
+                      <div className="flex items-center gap-2 mb-1">
+                        {notification.type === 'parent_transfer' && (
+                          <span className="text-lg">💰</span>
+                        )}
+                        <p className={`text-sm font-medium ${
+                          notification.type === 'parent_transfer' 
+                            ? 'text-green-700' 
+                            : 'text-orange-700'
+                        }`}>
                         {notification.message}
                       </p>
-                      <p className="text-orange-600 text-xs">
+                      </div>
+                      <p className={`text-xs ${
+                        notification.type === 'parent_transfer' 
+                          ? 'text-green-600' 
+                          : 'text-orange-600'
+                      }`}>
                         {new Date(notification.date).toLocaleDateString('ar-SA')}
                       </p>
+                      {notification.type === 'parent_transfer' && (
+                        <div className="mt-2 text-xs text-green-600 font-bold">
+                          🎁 +{Math.floor(notification.amount/10)} نقطة مكافأة
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -753,6 +1033,12 @@ const BankPage: React.FC = () => {
         )}
 
         <Navigation />
+        
+        {/* Reward System */}
+        <RewardSystem 
+          isOpen={showRewardSystem} 
+          onClose={() => setShowRewardSystem(false)} 
+        />
       </div>
     </AuthWrapper>
   );

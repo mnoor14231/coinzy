@@ -302,7 +302,7 @@ const financialCourses: Course[] = [
 export default function LessonsPage() {
   const { isAuthenticated, currentUser, logout } = useAuthStore();
   const { selectedCharacter } = useCharacterStore();
-  const { addXP } = useGameStore();
+  const { addXP, addRewardPoints } = useGameStore();
   const { speakWithCharacter, isSpeaking, isProcessing } = useEnhancedVoice();
   const { playSound } = useEnhancedSounds();
   const router = useRouter();
@@ -453,6 +453,10 @@ export default function LessonsPage() {
       setShowConfetti(true);
       setCharacterEmotion('celebrating');
       addXP(25);
+      
+      // Add reward points for correct answer (10 points per correct answer)
+      addRewardPoints(10, `إجابة صحيحة في درس: ${selectedCourse.title}`);
+      
       setShowRetry(false);
       
       // Play success sound
@@ -465,7 +469,7 @@ export default function LessonsPage() {
       if (selectedCharacter) {
         setTimeout(() => {
           speakWithCharacter(
-            selectedOption.feedback,
+            `${selectedOption.feedback} حصلت على 10 نقاط مكافأة!`,
             selectedCharacter,
             'celebrating'
           );
@@ -557,13 +561,17 @@ export default function LessonsPage() {
     } else {
       // Course completed
       addXP(selectedCourse.xpReward);
+      
+      // Add reward points for completing the course (100 points per course)
+      addRewardPoints(100, `إكمال درس: ${selectedCourse.title}`);
+      
       setCharacterEmotion('celebrating');
       setShowConfetti(true);
       
       if (selectedCharacter) {
         setTimeout(() => {
           speakWithCharacter(
-            `مبروك! أكملت الدرس "${selectedCourse.title}" بنجاح! أنت بطل حقيقي!`,
+            `مبروك! أكملت الدرس "${selectedCourse.title}" بنجاح! حصلت على 100 نقطة مكافأة! أنت بطل حقيقي!`,
             selectedCharacter,
             'celebrating'
           );

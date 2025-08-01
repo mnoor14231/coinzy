@@ -68,11 +68,18 @@ export interface FamilyNotification {
   message: string;
   amount: number;
   date: Date;
-  type: 'milestone' | 'achievement' | 'goal_reached';
+  type: 'milestone' | 'achievement' | 'goal_reached' | 'parent_transfer';
   read: boolean;
 }
 
-
+export interface RewardTransaction {
+  id: string;
+  type: 'earned' | 'converted_to_cash' | 'spent_on_store';
+  points: number;
+  description: string;
+  date: Date;
+  storeType?: 'apple' | 'roblox' | 'ps';
+}
 
 interface GameState {
   // User Progress
@@ -93,6 +100,10 @@ interface GameState {
   savingsGoal: number;
   transactions: BankTransaction[];
   interestRate: number;
+  
+  // Reward Points System
+  rewardPoints: number;
+  rewardTransactions: RewardTransaction[];
   
   // Weekly Saving Goals
   weeklySavingGoal: WeeklySavingGoal | null;
@@ -124,6 +135,11 @@ interface GameState {
   updateStreak: () => void;
   resetDailyMissions: () => void;
   markNotificationAsRead: (notificationId: string) => void;
+  
+  // Reward Points Actions
+  addRewardPoints: (points: number, description: string) => void;
+  convertPointsToCash: (points: number) => void;
+  spendPointsOnStore: (points: number, storeType: 'apple' | 'roblox' | 'ps') => void;
 }
 
 const initialQuestions: Question[] = [
@@ -300,6 +316,8 @@ export const useGameStore = create<GameState>()(
       savingsGoal: 500,
       transactions: [],
       interestRate: 0.05,
+      rewardPoints: 0,
+      rewardTransactions: [],
       weeklySavingGoal: null,
       weeklyProgress: 0,
       familyTasks: initialFamilyTasks,
@@ -332,9 +350,21 @@ export const useGameStore = create<GameState>()(
       }),
 
       completeQuestion: (questionId: string) => set((state) => {
+        const question = state.questions.find(q => q.id === questionId);
         const updatedQuestions = state.questions.map((question: Question) =>
           question.id === questionId ? { ...question, completed: true } : question
         );
+
+        // Add reward points for completing question (100 points per question)
+        const rewardPoints = 100;
+        const newRewardPoints = state.rewardPoints + rewardPoints;
+        const newRewardTransaction: RewardTransaction = {
+          id: Date.now().toString(),
+          type: 'earned',
+          points: rewardPoints,
+          description: `إكمال درس: ${question?.title || 'درس جديد'}`,
+          date: new Date()
+        };
 
         // Update daily mission progress
         const completedQuestionsToday = updatedQuestions.filter((q: Question) => q.completed).length;
@@ -364,7 +394,9 @@ export const useGameStore = create<GameState>()(
         return {
           questions: updatedQuestions,
           dailyMissions: updatedMissions,
-          achievements: updatedAchievements
+          achievements: updatedAchievements,
+          rewardPoints: newRewardPoints,
+          rewardTransactions: [newRewardTransaction, ...state.rewardTransactions]
         };
       }),
 
@@ -459,8 +491,35 @@ export const useGameStore = create<GameState>()(
           description
         };
 
+        // Calculate reward points (10 riyal = 1 point, 100 riyal = 10 points)
+        const rewardPoints = Math.floor(amount / 10);
+        const newRewardPoints = state.rewardPoints + rewardPoints;
+        
+        let newRewardTransaction: RewardTransaction | null = null;
+        if (rewardPoints > 0) {
+          newRewardTransaction = {
+            id: Date.now().toString(),
+            type: 'earned',
+            points: rewardPoints,
+            description: `مكافأة إيداع ${amount} ريال`,
+            date: new Date()
+          };
+        }
+
         // Create family notifications for milestones
         const newNotifications: FamilyNotification[] = [];
+        
+        // Check for parent transfer notification
+        if (description.includes('تحويل من الأهل') || description.includes('مكافأة سريعة من الأهل')) {
+          newNotifications.push({
+            id: `parent_transfer_${Date.now()}`,
+            message: `💰 ${description} - أرسل لك الأهل ${amount} ريال! 🎁`,
+            amount: amount,
+            date: new Date(),
+            type: 'parent_transfer',
+            read: false
+          });
+        }
         
         // Check for 50 riyal milestone
         if (state.bankBalance < 50 && newBalance >= 50) {
@@ -501,6 +560,10 @@ export const useGameStore = create<GameState>()(
         return {
           bankBalance: newBalance,
           transactions: [newTransaction, ...state.transactions],
+          rewardPoints: newRewardPoints,
+          rewardTransactions: newRewardTransaction 
+            ? [newRewardTransaction, ...state.rewardTransactions]
+            : state.rewardTransactions,
           familyNotifications: [...newNotifications, ...state.familyNotifications]
         };
       }),
@@ -574,7 +637,83 @@ export const useGameStore = create<GameState>()(
             ? { ...task, completed: true, dateCompleted: new Date() }
             : task
         )
-      }))
+      })),
+
+      // Reward Points Actions
+      addRewardPoints: (points: number, description: string) => set((state) => {
+        const newPoints = state.rewardPoints + points;
+        const newTransaction: RewardTransaction = {
+          id: Date.now().toString(),
+          type: 'earned',
+          points,
+          description,
+          date: new Date()
+        };
+
+        return {
+          rewardPoints: newPoints,
+          rewardTransactions: [newTransaction, ...state.rewardTransactions]
+        };
+      }),
+
+      convertPointsToCash: (points: number) => set((state) => {
+        if (state.rewardPoints < points) {
+          throw new Error('نقاط غير كافية');
+        }
+
+        const cashAmount = points * 0.1; // 1 point = 0.1 riyal
+        const newPoints = state.rewardPoints - points;
+        
+        const newRewardTransaction: RewardTransaction = {
+          id: Date.now().toString(),
+          type: 'converted_to_cash',
+          points: -points,
+          description: `تحويل ${points} نقطة إلى ${cashAmount.toFixed(2)} ريال`,
+          date: new Date()
+        };
+
+        const newBankTransaction: BankTransaction = {
+          id: Date.now().toString(),
+          amount: cashAmount,
+          type: 'real_money_deposit',
+          date: new Date(),
+          description: `تحويل نقاط المكافآت (${points} نقطة)`
+        };
+
+        return {
+          rewardPoints: newPoints,
+          rewardTransactions: [newRewardTransaction, ...state.rewardTransactions],
+          bankBalance: state.bankBalance + cashAmount,
+          transactions: [newBankTransaction, ...state.transactions]
+        };
+      }),
+
+      spendPointsOnStore: (points: number, storeType: 'apple' | 'roblox' | 'ps') => set((state) => {
+        if (state.rewardPoints < points) {
+          throw new Error('نقاط غير كافية');
+        }
+
+        const newPoints = state.rewardPoints - points;
+        const storeNames = {
+          apple: 'متجر Apple',
+          roblox: 'متجر Roblox',
+          ps: 'متجر PlayStation'
+        };
+
+        const newTransaction: RewardTransaction = {
+          id: Date.now().toString(),
+          type: 'spent_on_store',
+          points: -points,
+          description: `شراء من ${storeNames[storeType]} (${points} نقطة)`,
+          date: new Date(),
+          storeType
+        };
+
+        return {
+          rewardPoints: newPoints,
+          rewardTransactions: [newTransaction, ...state.rewardTransactions]
+        };
+      })
     }),
     {
       name: 'coinzy-game-storage',
