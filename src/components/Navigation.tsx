@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
-import { BookOpen, Target, PiggyBank, Trophy, Users } from 'lucide-react';
+import { BookOpen, Target, PiggyBank, Trophy, Users, Map } from 'lucide-react';
 
 const Navigation: React.FC = () => {
   const pathname = usePathname();
@@ -29,6 +29,7 @@ const Navigation: React.FC = () => {
   const navItems = [
     { href: '/lessons', icon: BookOpen, label: 'القصص', emoji: '📚', color: 'from-blue-500 to-cyan-500', roles: ['child'] },
     { href: '/missions', icon: Target, label: 'المهام', emoji: '🎯', color: 'from-green-500 to-emerald-500', roles: ['child'] },
+    { href: '/city', icon: Map, label: 'عالم كوينزي', emoji: '🏙️', color: 'from-indigo-500 to-purple-500', roles: ['child'] },
     { href: '/bank', icon: PiggyBank, label: 'البنك', emoji: '🏦', color: 'from-pink-500 to-rose-500', roles: ['child'] },
     { href: '/progress', icon: Trophy, label: 'التقدم', emoji: '🏆', color: 'from-purple-500 to-violet-500', roles: ['child'] },
     { href: '/parent', icon: Users, label: 'عائلة', emoji: '👨‍👩‍👧‍👦', color: 'from-orange-500 to-amber-500', roles: ['parent'] }

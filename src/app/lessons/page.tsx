@@ -303,7 +303,7 @@ export default function LessonsPage() {
   const { isAuthenticated, currentUser, logout } = useAuthStore();
   const { selectedCharacter } = useCharacterStore();
   const { addXP, addRewardPoints } = useGameStore();
-  const { speakWithCharacter, isSpeaking, isProcessing } = useEnhancedVoice();
+  const { speakWithCharacter, stop, isSpeaking, isProcessing } = useEnhancedVoice();
   const { playSound } = useEnhancedSounds();
   const router = useRouter();
   
@@ -664,7 +664,7 @@ export default function LessonsPage() {
 
           {/* Character Display */}
           {selectedCharacter && (
-            <div className="flex justify-center mb-6">
+            <div className="flex justify-center mb-6 relative">
               <Amazing3DCharacter
                 character={selectedCharacter}
                 emotion={characterEmotion}
@@ -672,6 +672,20 @@ export default function LessonsPage() {
                 isProcessing={isProcessing}
                 size="large"
               />
+              
+              {/* Global Stop Voice Button */}
+              {(isSpeaking || isProcessing) && (
+                <button
+                  onClick={() => {
+                    stop();
+                    setCharacterEmotion('idle');
+                  }}
+                  className="absolute top-0 right-0 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full transition-all duration-300 shadow-lg z-10"
+                  title="إيقاف الصوت"
+                >
+                  ⏹️
+                </button>
+              )}
             </div>
           )}
 
@@ -838,7 +852,7 @@ export default function LessonsPage() {
                             {currentLesson.story}
                           </p>
                         </div>
-                        <div className="flex justify-center mt-2">
+                        <div className="flex justify-center gap-2 mt-2">
                           <button
                             onClick={() => {
                               if (!isSpeaking && !isProcessing && selectedCourse && selectedCharacter) {
@@ -851,10 +865,22 @@ export default function LessonsPage() {
                               }
                             }}
                             disabled={isSpeaking || isProcessing}
-                            className="bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white font-bold py-2 px-6 rounded-xl transition-all duration-300 ml-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white font-bold py-2 px-6 rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             🔁 إعادة قراءة القصة
                           </button>
+                          
+                          {(isSpeaking || isProcessing) && (
+                            <button
+                              onClick={() => {
+                                stop();
+                                setCharacterEmotion('idle');
+                              }}
+                              className="bg-gradient-to-r from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 text-white font-bold py-2 px-6 rounded-xl transition-all duration-300"
+                            >
+                              ⏹️ إيقاف الصوت
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -869,7 +895,7 @@ export default function LessonsPage() {
                           </h3>
                         </div>
 
-                        <div className="flex justify-center mt-2">
+                        <div className="flex justify-center gap-2 mt-2">
                           <button
                             onClick={() => {
                               if (!isSpeaking && !isProcessing && selectedCourse && selectedCharacter) {
@@ -882,10 +908,22 @@ export default function LessonsPage() {
                               }
                             }}
                             disabled={isSpeaking || isProcessing}
-                            className="bg-gradient-to-r from-blue-400 to-purple-500 hover:from-blue-500 hover:to-purple-600 text-white font-bold py-2 px-6 rounded-xl transition-all duration-300 ml-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="bg-gradient-to-r from-blue-400 to-purple-500 hover:from-blue-500 hover:to-purple-600 text-white font-bold py-2 px-6 rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             🔁 إعادة قراءة السؤال
                           </button>
+                          
+                          {(isSpeaking || isProcessing) && (
+                            <button
+                              onClick={() => {
+                                stop();
+                                setCharacterEmotion('idle');
+                              }}
+                              className="bg-gradient-to-r from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 text-white font-bold py-2 px-6 rounded-xl transition-all duration-300"
+                            >
+                              ⏹️ إيقاف الصوت
+                            </button>
+                          )}
                         </div>
 
                         {/* Answer Options */}

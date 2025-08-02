@@ -28,6 +28,8 @@ export default function HomePage() {
   const [isPageLoaded, setIsPageLoaded] = useState(false);
   const [showContent, setShowContent] = useState(false);
   const [logoPosition, setLogoPosition] = useState<'center' | 'final'>('center');
+  const [showUsernameHint, setShowUsernameHint] = useState(false);
+  const [showPasswordHint, setShowPasswordHint] = useState(false);
 
   const { login } = useAuthStore();
   const { playSound } = useSounds();
@@ -340,6 +342,8 @@ export default function HomePage() {
                           type="text"
                           value={familyName}
                           onChange={(e) => setFamilyName(e.target.value)}
+                          onFocus={() => setShowUsernameHint(true)}
+                          onBlur={() => setTimeout(() => setShowUsernameHint(false), 200)}
                           className="w-full p-4 bg-white border-2 border-gray-200 rounded-2xl focus:border-blue-500 focus:outline-none text-gray-900 placeholder-gray-600 text-lg font-medium transition-all duration-300"
                           placeholder="اكتب حكيم"
                           dir="rtl"
@@ -347,6 +351,25 @@ export default function HomePage() {
                         <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500">
                           🏠
                         </div>
+                        
+                        {/* Username Hint Popup */}
+                        {showUsernameHint && (
+                          <div className="absolute bottom-full left-0 right-0 mb-2 bg-blue-500 text-white p-3 rounded-xl shadow-lg z-[9999] animate-fadeIn">
+                            <div className="text-center font-bold text-sm">
+                              💡 اسم العائلة: <span className="bg-white text-blue-500 px-2 py-1 rounded">حكيم</span>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setFamilyName('حكيم');
+                                setShowUsernameHint(false);
+                              }}
+                              className="w-full mt-2 bg-white text-blue-500 py-1 px-3 rounded-lg text-sm font-bold hover:bg-blue-50 transition-colors"
+                            >
+                              استخدم هذا الاسم
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -360,6 +383,8 @@ export default function HomePage() {
                           type={showPassword ? 'text' : 'password'}
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
+                          onFocus={() => setShowPasswordHint(true)}
+                          onBlur={() => setTimeout(() => setShowPasswordHint(false), 200)}
                           className="w-full p-4 pr-12 bg-white border-2 border-gray-200 rounded-2xl focus:border-blue-500 focus:outline-none text-gray-900 placeholder-gray-600 text-lg font-medium text-right transition-all duration-300"
                           placeholder={selectedRole === 'parent' ? '12 كلمة مرور الوالدين' : '123 كلمة مرور الطفل'}
                         />
@@ -370,6 +395,27 @@ export default function HomePage() {
                         >
                           {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                         </button>
+                        
+                        {/* Password Hint Popup */}
+                        {showPasswordHint && selectedRole && (
+                          <div className="absolute bottom-full left-0 right-0 mb-2 bg-green-500 text-white p-3 rounded-xl shadow-lg z-[9999] animate-fadeIn">
+                            <div className="text-center font-bold text-sm">
+                              🔑 كلمة المرور: <span className="bg-white text-green-500 px-2 py-1 rounded">
+                                {selectedRole === 'parent' ? '12' : '123'}
+                              </span>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setPassword(selectedRole === 'parent' ? '12' : '123');
+                                setShowPasswordHint(false);
+                              }}
+                              className="w-full mt-2 bg-white text-green-500 py-1 px-3 rounded-lg text-sm font-bold hover:bg-green-50 transition-colors"
+                            >
+                              استخدم كلمة المرور هذه
+                            </button>
+                          </div>
+                        )}
                       </div>
                       <p className="text-xs text-gray-600 mt-2">
                         💡 يمكنك استخدام الأرقام العربية (١٢٣) أو الإنجليزية (123)

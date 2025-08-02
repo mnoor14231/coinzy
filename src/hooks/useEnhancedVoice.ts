@@ -15,6 +15,7 @@ export const useEnhancedVoice = () => {
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [currentEmotion, setCurrentEmotion] = useState<string>('neutral');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
 
   // Check browser speech synthesis support
   useEffect(() => {
@@ -90,16 +91,21 @@ export const useEnhancedVoice = () => {
         const audioUrl = URL.createObjectURL(audioBlob);
         const audio = new Audio(audioUrl);
         
+        // Store current audio for stopping
+        setCurrentAudio(audio);
         setIsSpeaking(true);
+        
         audio.onended = () => {
           setIsSpeaking(false);
           setIsProcessing(false);
+          setCurrentAudio(null);
           URL.revokeObjectURL(audioUrl);
         };
         audio.onerror = (e) => {
           console.error('Audio playback error:', e);
           setIsSpeaking(false);
           setIsProcessing(false);
+          setCurrentAudio(null);
           URL.revokeObjectURL(audioUrl);
         };
         
@@ -155,16 +161,21 @@ export const useEnhancedVoice = () => {
         const audioUrl = URL.createObjectURL(audioBlob);
         const audio = new Audio(audioUrl);
         
+        // Store current audio for stopping
+        setCurrentAudio(audio);
         setIsSpeaking(true);
+        
         audio.onended = () => {
           setIsSpeaking(false);
           setIsProcessing(false);
+          setCurrentAudio(null);
           URL.revokeObjectURL(audioUrl);
         };
         audio.onerror = (e) => {
           console.error('Audio playback error:', e);
           setIsSpeaking(false);
           setIsProcessing(false);
+          setCurrentAudio(null);
           URL.revokeObjectURL(audioUrl);
         };
         await audio.play();
@@ -330,12 +341,32 @@ export const useEnhancedVoice = () => {
   }, [speakWithCharacter]);
 
   const stop = useCallback(() => {
+    // Stop browser speech synthesis
     if (isSupported) {
       speechSynthesis.cancel();
-      setIsSpeaking(false);
-      setCurrentEmotion('neutral');
     }
-  }, [isSupported]);
+    
+    // Stop current audio from external APIs
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+      setCurrentAudio(null);
+    }
+    
+    // Stop any other playing audio elements
+    const audioElements = document.querySelectorAll('audio');
+    audioElements.forEach(audio => {
+      audio.pause();
+      audio.currentTime = 0;
+    });
+    
+    // Reset states
+    setIsSpeaking(false);
+    setIsProcessing(false);
+    setCurrentEmotion('neutral');
+    
+    console.log('🔇 Voice stopped - both browser TTS and external API audio');
+  }, [isSupported, currentAudio]);
 
   const getAvailableVoices = useCallback(() => {
     return voices.filter(voice => 
