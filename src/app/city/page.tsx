@@ -7,9 +7,9 @@ import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-// City Model Component
-function CyberpunkCity() {
-  const { scene } = useGLTF('/models/cyberpunk_city.glb');
+// Aladdin Model Component
+function AladdinWorld() {
+  const { scene } = useGLTF('/models/alladin.glb');
   
   useEffect(() => {
     if (scene) {
@@ -45,8 +45,8 @@ function LoadingSpinner() {
     <div className="fixed inset-0 bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center z-50">
       <div className="text-center">
         <div className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
-        <div className="text-white text-lg font-bold">جاري تحميل المدينة...</div>
-        <div className="text-white/70 text-sm mt-2">Cyberpunk City Loading...</div>
+        <div className="text-white text-lg font-bold">جاري تحميل عالم علاء الدين...</div>
+        <div className="text-white/70 text-sm mt-2">Aladdin World Loading...</div>
       </div>
     </div>
   );
@@ -208,9 +208,9 @@ export default function CityPage() {
         <Environment preset="night" />
         <Stars radius={150} depth={100} count={8000} factor={6} saturation={0.1} fade speed={1} />
 
-        {/* City Model */}
+        {/* Aladdin World Model */}
         <Suspense fallback={null}>
-          <CyberpunkCity />
+          <AladdinWorld />
         </Suspense>
 
                  {/* Free Movement Camera Controls */}
@@ -219,7 +219,7 @@ export default function CityPage() {
            enableZoom={true}
            enableRotate={true}
            minDistance={0.5}
-           maxDistance={100}
+           maxDistance={500}
            maxPolarAngle={Math.PI / 1.5}
            minPolarAngle={-Math.PI / 4}
            dampingFactor={0.06}
